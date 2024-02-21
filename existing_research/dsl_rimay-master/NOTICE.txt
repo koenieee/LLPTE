@@ -1,0 +1,14 @@
+RIMAY is © 2023 University of Luxembourg and is distributed under the MIT license.
+
+Authors:
+  - Alvaro Veizaga (alvaro.veizaga@uni.lu)
+  - Mauricio Alferez (mauricio.alferez@uni.lu)
+  - Damiano Torre (damiano.torre@uni.lu)
+  - Lionel Briand (lionel.briand@uni.lu)
+  - Mehrdad Sabetzadeh (m.sabetzadeh@uottawa.ca)
+
+Journal Paper:
+  - "On Systematically Building a Controlled Natural Language for Functional Requirements", Empirical Software Engineering 2021
+
+Rimay includes the following components:
+  - Rimay rules licensed under MIT license

@@ -23,6 +23,19 @@ class Table:
                 self.e.insert(END, lst[i][j])
 
 
+class LLM_prompt_technique:
+    def __init__():
+        pass
+    
+class LLM_few_shot_learning():
+    def __init__():
+        pass
+        
+class LLM_chain_of_thought():
+    def __init__():
+        pass
+
+
 
 def setup_llm():
     client = OpenAI(
@@ -116,6 +129,11 @@ def show_table_precision_recall():
 def multiple_times():
     ask_llm_to_convert()
     show_verification_question()
+    
+def start_paska_tool():
+    jar_file_path = "java -jar smell_detector.jar"
+    
+    
     
 def main():
     setup_llm()

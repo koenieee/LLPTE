@@ -1,0 +1,1316 @@
+grammar org.xtext.Dsl_rimay with org.eclipse.xtext.common.Terminals
+
+generate dsl_rimay "http://www.xtext.org/Dsl_rimay"
+
+CNLFunctionalRequirements:
+ (
+   ('UI_Component_Types:' components+=UIComponent 	(',' compoments+=UIComponent)*) | 
+   ('Quantifiers:' quantifiers+=Quantifier 		(',' quantifiers+=Quantifier)*) |	
+   ('Actors:' actors+=Actor						(',' actors+=Actor)*) 	|
+   ('Classes:' classes+=Class 						(',' classes+=Class)*)	|
+   ('Units:' units+=Unit 							(',' units+=Unit)*)		|
+   ('Data_Mapping_Tables:' mapping_tables+=Data_Mapping_Table	(',' mapping_tables+=Data_Mapping_Table)*)
+ )*
+ requirements+=Requirement*
+;
+
+Data_Mapping_Table:
+ name = ID
+;
+ 
+Unit:
+ name=ID
+;
+Actor:
+ "actor" name=ID
+;
+Class:
+ "class" name=ID (':=' (property+=PropertyId)*)?
+;
+
+Label:
+ '(' 'referred' 'to' 'as' name = ID ')'
+;
+
+ActorOrClass:
+ Actor|Class
+;
+
+ActorOrClassOrLabel:
+ Actor|Class|Label
+;
+ActorOrClassOrLabelOrProperty:
+ Actor|Class|Label|PropertyId
+;
+ClassOrLabel:
+ Class|Label
+;
+ClassOrLabelUI:
+ Class|Label|UIComponent
+;
+
+ActorOrClassOrProperty:
+ Actor|Class|PropertyId
+;
+ClassOrLabelOrProperty:
+ Class|Label|PropertyId
+;
+ClassOrProperty:
+ Class|PropertyId
+;
+PropertyOrLabel:
+ PropertyId|Label
+;
+
+UIComponent :
+ name=ID
+;
+Quantifier:
+  "quantifier" name=ID	 
+;
+
+PropertyId: 
+ name=ID
+;
+
+IDPointID:
+ ID("." ID)?
+;
+
+//Requirement block
+Requirement :
+ (scope=Scope)?	
+ pattern = (WithoutCondition|WithCondition)
+ '.'
+;
+
+WithoutCondition:
+ ('The')? system_response=SystemResponse
+;
+
+WithCondition :	
+  condition+=ConditionStructure
+ ((',')? (connector+=('and'|'or'))? condition+=ConditionStructure)*
+ ',' ('then')?
+ system_response= SystemResponse
+;
+
+Scope:
+ 'For' scope_text += ScopeText
+ ('and' scope_text += ScopeText)?
+ ','
+;
+
+ScopeText:
+ modifier += (Modifier)? scope+=STRING
+;
+
+//CONDITIONS
+ConditionStructure:
+ WhileStructure | WhenStructure | WhereStructure | IfStructure  | TemporalStructure 
+;
+
+WhileStructure ://same semantics as in the Rupp's templates: 'As_long_as'
+ keyword= ('While'|'while')
+ preconditions = PreconditionStructure
+;
+
+WhenStructure:
+ keyword= ('When'|'when')
+ trigger = (Trigger | FreeExpression)
+;
+
+TemporalStructure:
+ ( RepeatOnce | Frequently) 
+ 
+;
+
+
+RepeatOnce:
+ advice_keyword= ('Before'|'before'|'After'|'after')//we didn't include as 'As_soon_as' because there is no difference wrt. After.
+ (event = Trigger  | time=Time | precondition=Condition)
+;
+
+Frequently:
+  keyword= ('every' | 'Every')
+  (time=Time | frequency=STRING)
+;
+
+
+WhereStructure:
+ keyword=('Where'|'where')
+ feature_is_included = FreeExpression
+;
+
+IfStructure:
+ keyword= ('If'|'if')
+ (
+   conditions = PreconditionStructure
+   |
+   unwanted_event = Trigger 
+ )
+;
+
+FreeExpression:
+ free_format_text=STRING
+;
+
+Trigger:
+ (modifier=Modifier)?	
+ actor=[Actor|ID] //(type=OfTypeDomainEntity)?//Actor
+ actions=ActionsExpression
+;
+
+PreconditionStructure :
+ ItemizedConditions | NonItemizedConditions 
+;
+
+Time:
+ amount=STRING 
+ units=[Unit]
+;
+
+ItemizedConditions:
+ 'the' 'following' 'conditions' 'are' 'satisfied' ':'
+ (item+=HYPHEN) precondition += Condition
+ ((','|',' 'and'|',' 'or'|'and'|'or')
+ (item+=HYPHEN) precondition += Condition)*
+;
+
+NonItemizedConditions: 
+ expression=ConditionsOrExpression
+;
+ConditionsOrExpression returns ConditionsNotItemized:
+ ConditionsAndExpression ({ConditionsOrExpression.left=current}  (',' 'or'|'or')  right=ConditionsAndExpression)*;	
+
+ConditionsAndExpression returns ConditionsNotItemized:
+ ConditionsPrimaryExpression ({ConditionsAndExpression.left=current} (',' 'and'|'and')  right=ConditionsPrimaryExpression)*;
+
+ConditionsPrimaryExpression returns ConditionsNotItemized:
+ '(' ItemizedConditions ')' | condition=Condition 
+;
+
+BULLET: (HYPHEN|INT);
+
+HYPHEN: '-';
+
+//Conditions
+Condition:
+ InstanceHasProperties 
+ |FreeExpression 
+ //| ExternallyDefinedProperties  @removed since it is not used : If the properties are described on..
+ | Convention
+ | ActorOrTypeOrPropertyOperatorElement//We don't have instances of Actors. 
+ //| TypeOperatorElement //@ merged with the ActorOperatorElement rule
+ //| InstanceOperatorElement//We only consider instances of Type
+ | InstanceOrPropertyOperatorValue
+ | UIComponentInstanceOperatorElement
+;
+
+
+InstanceHasProperties:
+ (modifier=Modifier)?
+ instance=NonUIComponentInstance 
+ operator=Contains
+ value=(ExternallyDefinedProperties | LocallyDefinedProperties)
+;
+/*
+* OperatorValuesExpr:
+ operator= (Compare | Contains | OtherOperators)
+ (value_modifier+=Modifier)?
+ valuesExpression=MultiValuesExpr
+ (additional_information=FreeExpression)?//e.g., of the last instruction, or the waiting list
+;
+* 
+*/
+
+ExternallyDefinedProperties :
+ 'the' 'properties' 'described' 'on'
+ req_id = STRING
+;
+
+LocallyDefinedProperties:
+ 'the' ('property'|'properties') ':'
+ valuesExpression=STRING
+;
+
+Convention :
+ (property_string= STRING  (defined_in_type=OfClassOrReferenceToLabel)?| property_reference = [PropertyId|IDPointID])//STRING// | d[]
+ keyword=('conforms'|'conform'|'comply'|'complies')
+ preposition= ('to'|'with')
+ (modifier=Modifier)?
+ convention_type=('format'|'convention'|'standard')
+ name_of_convention = STRING
+;
+
+ActorOrTypeOrPropertyOperatorElement://they don't want to have Actor instances
+ (modifier=Modifier)?
+ //('system'|'actor') //@ 
+ //actor = [Actor|ID] //@ [Actor|STRING]
+ actor_or_type_or_property = [ActorOrClassOrProperty|IDPointID] 
+ rest=OperatorValuesExpr
+;
+
+
+/*TypeOperatorElement:  //@ merged with the ActorOperatorElement rule
+ (modifier=Modifier)?
+ //'type'	
+ type = [Type|ID]
+ rest=OperatorValuesExpr
+; */
+
+/*InstanceOperatorElement: //@merged with InstanceOrPropertyOperatorValue to avoid the use of the keyword "of type"
+ (modifier=Modifier)?
+ non_ui_instance = STRING
+ //type=OfType//
+ ('of' 'type' type = [Type|ID])
+ rest=OperatorValuesExpr
+;*/
+
+InstanceOrPropertyOperatorValue:	//This is for the properties that are not retrieved from the models
+ (modifier=Modifier)?	
+ //"property" //@remove for make it more natural	
+ (non_ui_instance_or_property=STRING) //property_of=[Property|TypePropertyPoint] | //@ removed because of left recursive error
+ (defined_in_type=OfClassOrReferenceToLabel)?		
+ (label=Label)?	
+ rest=OperatorValuesExpr
+;
+
+UIComponentInstanceOperatorElement:
+ (modifier=Modifier)?
+ ui_component_name = STRING 
+ ui_component_type=[UIComponent] 
+ rest=OperatorValuesExpr
+;
+
+OperatorValuesExpr:
+ operator= (Compare | Contains | OtherOperators)
+ (value_modifier+=Modifier)?
+ valuesExpression=MultiValuesExpr
+ (additional_information=FreeExpression)?//e.g., of the last instruction, or the waiting list
+;
+
+MultiValuesExpr:
+ values=ValueOrValue
+;
+
+ValueOrValue returns MultiValuesExpr:
+ ValueAndValue ({ValueOrValue.multileft=current} (',' 'OR'|'OR') right=ValueAndValue  )*
+; 
+
+ValueAndValue returns MultiValuesExpr:
+ ValuePrimaryExpression ({ValueAndValue.multileft=current} (',' 'AND'|'AND') right= ValuePrimaryExpression )*
+;
+
+ValuePrimaryExpression returns MultiValuesExpr:
+ '(' MultiValuesExpr ')' | value=	AtomicValue
+;
+
+AtomicValue: 
+ value=STRING  (of_entity_2+=OfClassOrReferenceToLabel)?  (label=Label)?	
+;
+
+
+ActionsExpression: 
+ expression=ActionsOrExpression
+;
+
+ActionsOrExpression returns ActionsExpression:
+ ActionsAndExpression (({Or.left=current} (',' 'or'|'or') ) right=ActionsAndExpression)*;
+ 
+ActionsAndExpression returns ActionsExpression:
+ ActionsPrimaryExpression (({And.left=current} (',' 'and'|'and') ) right=ActionsPrimaryExpression)*;
+
+ActionsPrimaryExpression returns ActionsExpression:
+ '(' ActionsExpression ')' |
+ action=AtomicActionInTrigger
+;
+
+AtomicActionInTrigger:
+ (negation+=Negation)? action=(ActionPhrase | UIAction)
+;
+
+Modifier : 
+ (article= ArticleInLowercase | quantifier=[Quantifier|ID]) //| (quantifier=[Quantifier|ID] article= ArticleInLowercase) 
+;
+
+OfActorAndNonUIType:
+ //of_type=OfType | of_actor=OfActor | of_alias=OfReferenceToLabel
+ 'of' of_type=[ActorOrClassOrLabel|ID] 
+;
+
+OfClassOrReferenceToLabel:
+ 'of' 'type' of_type=[ClassOrLabel|ID]
+;
+ 
+//[ActorOrType|ID] | property =[Property|TypePropertyPoint]
+/*OfType:
+ //'ad'
+ 'of'  type=[Type|ID]
+;
+
+/*OfReferenceToLabel:
+ 'of' ref=[Label]
+ //ref=[Label] // instances can be called only when the label is defined using the "referred to as"
+;
+
+OfActor:
+ 'of' 'actor' actor=[Actor]	
+;*/
+
+Negation :
+ ('do'|'does') 'not'  
+;
+
+//Operators
+Compare:
+ is_are=('is'|'are') (not='not')?
+ (comparisson= (EqualsTo | GreaterThan | LessThan | GreaterOrEqualTo | LessOrEqualTo) )?
+;
+
+EqualsTo:
+ eq= ('equal'|'equals') 'to';
+
+GreaterThan:
+ gt = 'greater' 'than';
+
+LessThan:
+ lt= 'less' 'than';
+
+GreaterOrEqualTo:
+ gt=GreaterThan 'or' eq=EqualsTo
+;
+
+LessOrEqualTo:
+ LessThan 'or' equals=EqualsTo
+;
+
+Contains:
+ (negation=Negation)? 
+ has=('has'|'have'|'contain'|'contains')//has : if an object has an attribute
+;
+
+OtherOperators:
+ AllowProperty | AvailableFor 
+;
+
+AllowProperty:
+ (negation=Negation)? 
+ allows=('permit'|'permits') (only?='only')? //@ verb=('accept'|'accepts'|'allow'|'allows') // accept/s was removed since it was an overlap with the GetFrom rule
+;
+
+AvailableFor:
+ verb=('is'|'are') (not?='not')?
+ 'available' 'for'
+;
+
+//System Response block
+SystemResponse: 
+ (article=ArticleInLowercase)?
+  system_name=[Actor]	 
+  modal_verb=ModalVerb 
+  response_block=ResponseBlock
+;
+
+enum ArticleInLowercase: 
+ a|an|the
+;
+
+enum ModalVerb:
+ shall|must
+;
+
+ResponseBlock:
+ ResponseBlockNotItemized | ResponseBlockItemized
+;
+
+ResponseBlockNotItemized:
+ expression=OR_Response
+;
+
+OR_Response returns ResponseBlockNotItemized:
+ AND_Response (({Or2.left=current} (',' 'or'|'or') ) right=AND_Response)*;
+ 
+AND_Response returns ResponseBlockNotItemized:
+ PrimaryExpression_Response (({And2.left=current} (',' 'and'|'and')  ) right=PrimaryExpression_Response)*;
+
+PrimaryExpression_Response returns ResponseBlockNotItemized:
+ '(' ResponseBlockNotItemized ')' |
+ response=AtomicSystemResponse 
+;
+
+AtomicSystemResponse:
+ (modal_verb=ModalVerb)? (not?='not')? 
+ system_response=ActionPhrase
+ ('every' frequency=STRING )?
+;
+
+ResponseBlockItemized:
+ 'do' 'the' 'following' 'actions'  
+ (in_sequence ?= 'in' 'sequence' )?
+ ":"
+ (item+=BULLET) response+=AtomicSystemResponse
+ (
+ (','|',' 'and'|',' 'or'|'and'|'or')?
+ (item+=BULLET) response+=AtomicSystemResponse)*
+;
+
+ActionPhrase :
+ REMOVE_10_1 | OBTAIN_13_5_2 | ADMIT_65 | BEG_58_2 | BEGIN_55_1 |
+ SAY_37_7 | CONCEALMENT_16 | ALLOW_64_1 | CONTRIBUTE_13_2 | DS_VALIDATE |
+ ENGENDER_27 | EXCHANGE_13_6 | FORBID_67 |  
+  ENFORCE_63 | HERD_47_5_2  | NEGLECT_75 |LIMIT_76 | 
+  SHAKE_22_3_2_1 | THROW_17_1  
+ | OTHER_COS_45_4 |TRANSCRIBE_25_4 | MIX_22_1_2_1  |TURN_26_6_1 | USE_105 | SEND_11_1_1 
+ | SEE_30_1_1 | REFLEXIVE_APPEARANCE_48_1_2 | PUT_9_1 | DS_Migrate
+ | CREATE_26_4 | DS_Interrupt | DS_UPDATE |	DS_SelectUnselect | DS_UPLOAD | Find | KEEP_15_2  
+ | INVOLVE_107 | MIX_22_1_2 |  DS_Synchronize
+ | Split  | ApplyFor | DS_GetFrom   | STOP_55_4 | SEARCH_35_2
+ | ESTABLISH_55_5_1 | ADVISE_37_9_1 |DS_ENABLE_DISABLE |DS_SUBSCRIBE |  DS_CANCEL |DS_CALCULATE//check
+;
+
+enum PREPOSITION_SRC :
+ from | out | out_of
+;
+enum PREPOSITION_LOC :
+ in | above | againston | on | under | near 
+;
+
+//Instruct: direct or command someone to do something, especially as an official order
+ADVISE_37_9_1:
+ verb=('instruct'|'instructs')
+ ( (modifier=Modifier)? actor=[Actor|ID] ('to'|'in'))?
+ (modifier_action=Modifier)? action=STRING	
+ (keyword_extra_info=('using'|'based_on') (modifier_artifact=Modifier)? artifact=STRING)?
+;
+DS_CALCULATE: //update
+ 'calculate'|'recalculate'
+;
+
+//SIGMA must subscribe to the PM publisher flow related to the instruction status update
+DS_SUBSCRIBE: //update
+ verb=('subscribe'|'subscribes')
+ ('to'|'for')
+ text=STRING	
+;
+
+LIMIT_76 :
+ verb=(
+   'limit' | 'limits'| //We added from the list of members VNet Class
+   'restrict' | 'restricts' | //A
+   'reduce' | 'reduces' //A
+ )
+ (modifier=Modifier)?
+ property_or_instance= Property_or_Instance_or_Actor//PATIENT
+ ('to' reason=STRING )? //GOAL
+ 
+;
+
+DS_Synchronize :
+ verb=('synchronize'|'synchronizes')
+ (synchronized_entities+=EntityWithEntity | synchronized_properties+=PropertyWithProperty)
+ (','
+   (synchronized_entities+=EntityWithEntity | synchronized_properties+=PropertyWithProperty)
+ )*
+;
+
+EntityWithEntity:	
+ (from_entity=NonUIComponentInstance | from_entity_ref=[ClassOrLabel|ID])  
+ 'with' (to_entity=NonUIComponentInstance | to_entity_ref?=[TypeOrLabel|ID])			
+;
+
+PropertyWithProperty:			
+ ('property' ( from_property=PropertyDef | from_property_ref=PropertyRef)
+ 'with' 'property' (to_property=PropertyDef | to_property_ref=PropertyRef))
+;
+
+HERD_47_5_2:
+ verb= ('aggregate' | 'aggregates')
+ (modifier=Modifier)?
+ properties=Properties
+ ('together')?
+;
+
+INVOLVE_107:
+ verb= ('include' | 'includes')
+ (modifier=Modifier)?
+ properties= Properties //THEME
+ ('in' (instance=NonUIComponentInstance | class=[ClassOrLabel]))//In VN this is GOAL, not Theme_instance.
+;
+
+ALLOW_64_1 :
+ verb=(
+   'allow' | 'allows' | // A		
+   'authorize'|'authorizes' //A 
+ )
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ (actor=[Actor] 'to')?
+ feature = STRING //THEME VN says predicate. In VN it only allows the use of the verb BE
+ ('in' (modifierIn=Modifier)? //This part is not in VN
+   ( class=[ClassOrLabel|ID] |
+   place=Place | 
+   ui_component=UIComponentInstance )
+ )?
+;
+
+Place:
+ place=STRING place_type=OfActorAndNonUIType
+;
+
+DS_ENABLE_DISABLE:
+ verb='enable'|'disable'  // B 	
+ (modifier=Modifier)?
+ (actor=[Actor|ID] 'to')?	
+ feature = STRING //VN says predicate. In VN it only allows the use of the verb BE
+ ('in' (modifierIn=Modifier)? //This part is not in VN
+   ( class=[ClassOrLabel|ID] |
+   place=Place | 
+   ui_component=UIComponentInstance )
+ )?
+;
+
+ENFORCE_63:
+ verb=('enforce' | 'enforces')
+ (modifier=Modifier)?
+ (actor=[Actor|ID] 'to')?
+ rule_to_be_enforced = STRING //VN says Theme
+ ('in' (modifierIn=Modifier)? //This part is not in VN
+   ( (type=[ClassOrLabel|ID])|(place=STRING place_type=OfActorAndNonUIType)
+     |
+   ui_component=UIComponentInstance 
+   )
+ )?
+;
+
+DS_Interrupt :
+ verb= ('interrupt'|'interrupts')
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ (( actor=[Actor]  )|  // (type=OfType)? Actor does not have a entity that contains it 
+ ( process = STRING 'process'))
+ ('with' instrument=STRING)? //Instrument in our context can be an event or action
+;
+
+
+
+UIAction: 
+ (adverb_phrase_before_verb = (STRING|('right'|'left'|'double') ))?//'right' click, 'double' clicks
+ verb=('clicks'|'puts-the-focus'| 'focuses' | 'ticks'| 'opens')
+ (adverb_phrase_after_verb = (STRING|('twice')))?//click 'twice'
+ ('on')?
+ (modifier=Modifier)?
+ ui_component= UIComponentInstance
+ //('displayed' 'on' on_ui_component = UIComponentInstance)?
+;
+ 
+REFLEXIVE_APPEARANCE_48_1_2: //missing display property
+ verb=('display'|'displays'|
+   'show'|'shows'
+ )
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ (theme+=Instance | ref+=[ClassOrLabel|ID])//THEME
+ (connector+=('and'|'or') 
+   (theme += Instance
+     |
+     (ref+=[ClassOrLabelUI|ID])
+   )
+ )*
+ ('to' recipient=[Actor|ID])?
+ ('as' as_instance= STRING (as_ui_component=[UIComponent])? )? // NOT IN VERBNEt CHECK where is used AS, specific name, e.g., 'error' 'Message'
+ (('on'|'in') (modifier_in=Modifier)? //NOT IN VERBNET
+   ((on_in_actor = [Actor])
+   |
+   on_in_ui_instance = UIComponentInstance
+   )
+ )?  //on 'name' 'screen'
+ ('until' period_or_event=STRING)?  //Not in Verbnet 
+ ('with' 'the' 'default' ('values'| 'value') default_value=STRING)? //Not in Verbnet the default value can be applied to the entire object or in this case, to a particular property.
+;
+
+SEE_30_1_1:
+ verb=('detect'|'detects')
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ ( stimulus_entity += NonUIComponentInstance |  entityReferenced+=[ClassOrLabel|ID]) 	
+ (connector+=('and'|'or') 
+   (stimulus_entity += NonUIComponentInstance |  entityReferenced+=[ClassOrLabel|ID])
+ )* 
+ ('on' (on_entity+=NonUIComponentInstance |entityReferenced+=[ClassOrLabel|ID]) //Not in VerbNet
+   (connector_2=('and'|'or') 
+     (on_entity+= NonUIComponentInstance|entityReferenced+=[ClassOrLabel|ID])
+   )?
+ )? //Not in VerbNet
+;
+
+ActorOrClassOrInstanceOrProperty:
+ actor_or_class_or_property = [ActorOrClassOrLabelOrProperty|ID] |
+  (instance_or_property += STRING ('of' class=[ClassOrLabel|ID])? )
+     
+;
+
+ActorOrClassOrInstanceOrUIOrProperty:
+ actor_or_class_or_property = [ActorOrClassOrLabelOrProperty|IDPointID] |
+ (instance_or_property += STRING (('of')? class_or_ui+= [ClassOrLabelUI|ID]))//the of is optional because we say: `the warning message' and not `the warning of message'!
+;
+
+ActorOrInstanceOrUIInstance:  //Including the NonUI Entities
+ actor_type_alias=[ActorOrClassOrLabel|ID] | (instance += STRING (('of')? type_or_label_or_ui+= [ClassOrLabelUI|ID])?)
+ //(actor=[Actor] | (entity += STRING (entity_type+= OfNonUIType)?) | 'entity_named' ref_entity_defined_in_req=[Label] | 'entity' entity_header=[Type] )
+   
+;
+
+
+
+REMOVE_10_1://deduct and exclude have a different semantics but they have the same structure
+ verb=(
+ 'extract'|'extracts'| //A
+ 'remove'|'removes' | //A
+ 'delete'|'deletes'| //A
+ 'deduct'|'deducts' //Evaluation
+ )
+ (modifier=Modifier)?
+ property=Properties //THEME 
+ (preoposition=PREPOSITION_SRC source=Elements)?//SOURCE
+ (keyword_extra_info=('using'|'based_on') artifact=STRING)?//The System must exclude the "gregorian dates that are not business days" based_on "the relevant calendar".
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)?)? //If the "fund frequency" is "semi-annually" and the "frequency description" is not equal to "DD/MM", then System must calculate the "next NAV date" in compliance with "calculation logic" described  in "Semi-annually sub process".
+;
+
+NEGLECT_75: //VN does not contain ignore, but neglect and omit
+ verb=(
+ 'neglect'|'neglects'| //It is a member of the verbnet class but 
+ 'ignore'|'ignores' //A
+ )
+ (modifier=Modifier)?
+ theme=Properties
+ (source_preoposition=PREPOSITION_SRC source=Elements)?
+ (keyword_extra_info=('using'|'based_on') artifact=STRING)?
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)?)? 
+;
+
+ADMIT_65://deduct and exclude have a different semantics but they have the same structure
+ verb= ('exclude'|'excludes')
+ (modifier=Modifier)?
+ theme= (Property_or_Instance_or_Actor)//THEME
+ (location_preposition=PREPOSITION_LOC location=Elements)?//LOCATION
+ (keyword_extra_info=('using'|'based_on') artifact=STRING)?//The System must exclude the "gregorian dates that are not business days" based_on "the relevant calendar".
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)?)? //If the "fund frequency" is "semi-annually" and the "frequency description" is not equal to "DD/MM", then System must calculate the "next NAV date" in compliance with "calculation logic" described  in "Semi-annually sub process".
+;
+
+OBTAIN_13_5_2://we separated select and unselect because they had UI specific parts.
+ verb= (
+   'accept'	| 'accepts'		| //A  Not Accept==Reject
+   'receive' 	| 'receives'	| //A
+   'retrieve' 	| 'retrieves'	| //A
+   'reject' | 'rejects' |//A. Not inVebnet but because of the structure we added here
+   'decommission' | 'decommissions'// Not in verbnet
+ )	
+ (modifier=Modifier)?
+ instance_or_class = Instance_or_Class
+ (source=SOURCE_OBTAIN)?
+ //(source_preoposition=PREPOSITION_SRC source = ElementsNoUI)?
+ (channel_through_rule = CHANNEL_THROUGH)?
+ //(keyword_2='through' actor += [Actor|ID] (connector_through+=('and'|'or') actor += [Actor|ID])*)? //to be used with accept and receive
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)?)? //If the "fund frequency" is "semi-annually" and the "frequency description" is not equal to "DD/MM", then System must calculate the "next NAV date" in compliance with "calculation logic" described  in "Semi-annually sub process".
+;
+
+
+SOURCE_OBTAIN:
+ source_preoposition=PREPOSITION_SRC source = ElementsNoUI
+;
+
+
+BEG_58_2 :
+ verb = ('request' | 'requests')
+ (modifier=Modifier)?
+ actor = [Actor]//Recipient
+ (('for'|'to') topic=STRING)?
+ //topic=multiple_actor_or_entity
+ ('by' 'using' modifier2=Modifier?
+   instrument= STRING
+   //modifier=Modifier property= (PropertyDef|PropertyRef)
+ )?
+ //request to begin work immediately.
+ //request for more information.
+;
+
+Elements:
+   (article+=ArticleInLowercase)? 
+   actor_class_property_instance_or_UI+=ActorOrClassOrInstanceOrUIOrProperty 
+   (connector+=('and'|'or') 
+   (article+=ArticleInLowercase)? actor_class_property_instance_or_UI+= ActorOrClassOrInstanceOrUIOrProperty
+   )?
+;
+
+ElementsNoUI :
+  (modifier_from+=Modifier)?  actor_or_entity += ActorOrClassOrInstanceOrProperty  
+     (connector+=('and'|'or') (modifier_from+=Modifier)? actor_or_entity += ActorOrClassOrInstanceOrProperty )*
+;
+
+THEME : 
+ Instance_or_Class |  Properties |Property_or_Instance_or_Actor
+;
+Instance_or_Class :
+ (entity+=NonUIComponentInstance | class_ref+=[Class])
+ (connector+=('and'|'or') (modifier_2+=Modifier)? 
+   (entity+=NonUIComponentInstance | class_ref+=[Class] )
+ )*	
+;
+
+Properties :
+ (
+   (property_or_part+=STRING (of_class+=OfClassOrReferenceToLabel | ui+=[UIComponent])?) 
+   |
+   class_point_property+=PropertyRef
+ )
+ (
+   connector+=(','|'and'|'or')  
+   ( (property_or_part+=STRING  (of_class+=OfClassOrReferenceToLabel | ui+=[UIComponent] )?) 
+     |(  class_point_property+=PropertyRef  )
+   )
+ )*
+;
+
+Property_or_Instance_or_Actor:
+ ( (non_ui_instance_or_property+=STRING (defined_in_type+=OfClassOrReferenceToLabel)? ) |
+ (property_or_type_ref+=[ActorOrClassOrLabelOrProperty|IDPointID]) )
+ (connector+=(','|'and'|'or')  
+   ( (non_ui_instance_or_property+=STRING (defined_in_type+=OfClassOrReferenceToLabel)? ) |
+ (property_or_type_ref+=[ActorOrClassOrLabelOrProperty|IDPointID]) )
+ )*
+;
+
+DS_GetFrom: 
+ verb = ('download'|'downloads'
+     //|'read'|'reads' // We suggested  to use a precise verb such as copy or extract 
+ )
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?	
+ theme= Instance_or_Class
+ (keyword_2='through' actor += [Actor|ID] (connector_through+=('and'|'or') actor += [Actor|ID])*)?
+ //(keyword_3='using' rule=STRING)?
+ ('in' 'compliance' 'with'  rule=STRING 'described' 'in' rule_location=STRING)?
+;
+
+DS_SelectUnselect:	//this should be in OBTAIN_13_5_2. It was set appart because it has UI-specific parts.
+ verb=(		
+   'select' 	| 'selects' 	|
+   'unselect' 	| 'unselects'  		//american English
+ )
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ (instance_name=UIComponentInstance | ref=[ClassOrProperty|IDPointID] |
+   property=PropertyDef 
+ )
+ //('as' as_object= STRING (as_object_type=ObjectType)?)?//then the System must select the "closest next business day" as "eligible NAV date".
+ //('displayed' 'on' on_ui_component= UIComponentInstance)?
+ ('from' (modifier_1=Modifier)? (from_entity = NonUIComponentInstance |from_entity_ref=[ClassOrLabel|ID] ))?
+ (keyword_extra_info=('using'|'based_on') artifact=STRING)?
+;
+
+SAY_37_7:
+ verb=('report'|'reports'|'propose'|'proposes'|
+   'notify'|'notifies'| // Not a member in VNEtclass but we added because they need the structure
+   'inform'|'informs' // Not a member in VNEtclass but we added because they need the structure
+ )
+ (modifier=Modifier)?
+ topic=STRING
+ 'to'	
+ recipient=ElementsNoUI
+ ('using' channel_account=STRING)?
+;
+
+CONCEALMENT_16:
+ verb=('hide'|'hides')
+ (modifier=Modifier)?
+ ((ui_component=UIComponentInstance) | (patient=STRING )) //PATIENT
+ ('from' actor=[Actor])? //multiple_actor_or_entity)?	BENEFICIARY
+;
+
+SEND_11_1_1://SendUpload:
+ verb= (
+   'return'|'returns'|
+   'send'|'sends'|
+   'forward'|'forwards' |
+   'pass'|'passes' |
+   'export'|'exports'|//Evaluation
+   'import'|'imports' )
+   //'upload'|'uploads'|			//Evaluation Added to B' analyze later
+   //'reverse'|'reverses'			//Added to B' analyze later
+ (adverb_phrase = STRING)?
+ (modifier=Modifier)? 
+ theme_to_send_rule+=THEME_TO_SEND
+ //(theme_to_send+=NonUIComponentInstance | theme_to_send_ref+= ClassRef) 
+ //(connector+=('and'|'or') (theme_to_send+=NonUIComponentInstance | theme_to_send_ref+= ClassRef) )?
+ (initial_location_rule = FROM_LOCATION )?
+ //('from' initial_location = ActorOrClassOrInstanceOrProperty )?
+ //('about' content = STRING)?//difference wrt. Migrate 
+ destination_rule+= DESTINATION
+ //'to' (modifier_to+=Modifier)?  destination+= ActorOrClassOrInstanceOrProperty  
+ //(
+ //	connector_2 += ('and'|'or') (modifier_to+=Modifier)?  destination += ActorOrClassOrInstanceOrProperty
+ //)*
+   
+ (channel_through_rule = CHANNEL_THROUGH)?//Not in VerbNet particular to our domain difference wrt. Migrate
+ //('through' channel_actor = [Actor|ID])?//Not in VerbNet particular to our domain difference wrt. Migrate .
+;
+
+THEME_TO_SEND:
+ (theme_to_send+=NonUIComponentInstance | theme_to_send_ref+= ClassRef)
+ (connector+=('and'|'or') (theme_to_send+=NonUIComponentInstance | theme_to_send_ref+= ClassRef) )?
+;
+
+FROM_LOCATION:
+ 'from' initial_location = ActorOrClassOrInstanceOrProperty
+;
+DESTINATION:
+ 'to' (modifier_to+=Modifier)?
+ destination+= ActorOrClassOrInstanceOrProperty
+ (
+   connector_2 += ('and'|'or') (modifier_to+=Modifier)?  destination += ActorOrClassOrInstanceOrProperty
+ )*
+;
+
+CHANNEL_THROUGH:
+ 'through' channel_actor = [Actor|ID]
+ (connector_through+=('and'|'or') actor += [Actor|ID])*
+;
+
+
+
+DS_UPLOAD: //It must be under "Other_cos" or "remedy" but inside these classes there is no link to WNet
+ verb=  ('upload'|'uploads'|
+   'reverse'|'reverses')//Evaluation 
+         //Added to B' analyze later
+ (adverb_phrase = STRING)?
+ (modifier=Modifier)? 
+ (theme_to_send+=NonUIComponentInstance | theme_to_send_ref+= ClassRef) 
+ (connector+=('and'|'or') (theme_to_send+=NonUIComponentInstance | theme_to_send_ref+= ClassRef) )?	
+ 'to' (modifier_to+=Modifier)?  destination+= ActorOrClassOrInstanceOrProperty  
+   (
+     connector_2 += ('and'|'or') (modifier_to+=Modifier)?  destination += ActorOrClassOrInstanceOrProperty 
+   )*	
+ ('through' channel_actor = [Actor|ID])?//Not in VerbNet particular to our domain difference wrt.
+;
+
+
+
+SHAKE_22_3_2_1:
+ verb = ('concatenate'|'concatenates')
+ (modifier_patient=Modifier)?
+ patient= (PropertyDef | PropertyRef)
+ with_into= ('with'|'into')
+ (modifier_co_patient=Modifier)?
+ (label=Label)?	
+ co_patient= (PropertyDef | PropertyRef)
+ (('in' 'compliance' 'with'|'by' 'applying' 'the' 'rule')  rule=STRING 
+   ('described' 'in' rule_location=STRING)?
+ )?//Not in VNet
+ 
+;
+
+
+DS_Migrate:
+ verb= ('migrate'|'migrates')
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ (entity+=NonUIComponentInstance
+   | entity_ref+=ClassRef) //(entity_type+=OfType)?
+ (connector+=('and'|'or') 
+   (entity+= NonUIComponentInstance
+     | entity_ref+=ClassRef )
+ )*   //(entity_type+=OfType)
+ ('from' entity_or_actor_from+= ActorOrClassOrInstanceOrProperty )?
+ ('to' entity_or_actor_to+= ActorOrClassOrInstanceOrProperty   
+   (
+     connector_2 += ('and'|'or') entity_or_actor_to+= ActorOrClassOrInstanceOrProperty  
+   )*
+ )?
+;
+
+KEEP_15_2: //before it was Store
+ verb=('store'|'stores')	
+ (modifier=Modifier)?
+ ( (('properties'|'property') properties=Properties) | ('value'|'values') values = STRING) //THEME	
+ (preposition=PREPOSITION_LOC (modifier_in=Modifier)? (place_name=NonUIComponentInstance | place_ref=[ClassOrLabel]) )?//LOCATION
+ ('for' 'a' 'period' 'of' period=STRING 'starting' 'from' starting_date =STRING)?	
+;
+
+FORBID_67:
+ verb=(	'prevent'|'prevents')
+ (article=ArticleInLowercase)?
+ ( ((actor =[Actor])? 'from'	action_with_agent = STRING) | action_no_agent = STRING )
+;
+//Oxygen must prevent the deletion and display a warning message: ‘You can not delete this participant.
+
+Find: 
+ verb=('find'|'finds')
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ ((entityOrProperty=STRING (entity_or_property_type=OfClassOrReferenceToLabel)?)
+  | entity_or_property_ref=[ClassOrLabelOrProperty|IDPointID]) 
+ 'in' (modifier_in=Modifier)? 
+ ( uiEntityProperty=UIComponentInstance | 
+   nonUiEntityProperty=NonUIComponentInstance | 
+   container_entity_property_ref=[ClassOrLabel|ID]
+ )
+;
+
+CONTRIBUTE_13_2://before was named Restore
+ verb=(
+   'restore'|'restores' 
+   //'return'|'returns'// we put in SEND
+   //'extend'|'extends' // infrequent verb
+   )	
+ (modifier=Modifier)?	
+ theme=Properties//	THEME
+ ('to' recipient=STRING)?
+ ('for' 'a' 'period' 'of' period=STRING 'starting' 'from' starting_date =STRING)? // VN doesn't have this part.
+;
+
+EXCHANGE_13_6://REPLACE
+ verb=('replace'|'replaces')	
+ (modifier=Modifier)?
+ ( current_property=PropertyDef | property =[PropertyId|IDPointID] ) //THEME
+ 'for' //VN uses 'for', don't use 'with'
+ (new_prop_modifier=Modifier)?
+ new_property_value=STRING//VN: CO-Theme
+ (('in' 'compliance' 'with'|'by' 'applying' 'the' 'rule')  rule=STRING ('described' 'in' rule_location=STRING)?)?	
+;
+
+MIX_22_1_2: // to put something in addition to something that exists 
+ verb=('add'|'adds')	
+ (modifier=Modifier)? 
+ ((property_or_instance_to_be_added = Property_or_Instance_or_Actor) )
+ ('about' aboutInformation=STRING)? //check if it does make sense	
+ ('to') (modifier_to=Modifier )?  
+ entity_or_property_ref=ActorOrInstanceOrUIInstance//Co-Patient in linguistics
+   
+;
+
+//Property_or_Instance
+
+
+MIX_22_1_2_1: 
+ verb=('link'|'links'|
+     'map'|'maps' //map is not a member of any Vnet class we decided to add here
+ )
+ (linked_entity+=EntityWithEntity | linked_properties+=PropertyWithProperty)
+ (
+   ','
+   (linked_entity+=EntityWithEntity | linked_properties+=PropertyWithProperty)
+ )*
+;
+
+
+PUT_9_1: 
+ verb=('append'|'appends'| //not in VBNet
+   'insert'|'inserts' //Belongs to PUT-9.1-1
+ )
+ (modifier_theme=Modifier)?
+ property_append = (PropertyDef| PropertyRef)
+ location_preposition=PREPOSITION_LOC
+ (modifier_dest=Modifier)?
+ destination= (NonUIComponentInstance| PropertyRef)	
+;
+
+
+TRANSCRIBE_25_4:
+ verb=('copy'|'copies')
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ ( theme_tobe_copied=PropertyDef
+ | theme_tobe_copied_ref =PropertyRef )
+ 'into'( (destination=STRING (destination_type=OfClassOrReferenceToLabel)?) //Acc to VNet it is Loc and DestConf
+   | destination_ref=[ClassOrLabel|ID])
+;
+
+USE_105:
+ verb=(
+ 'use'|'uses' // Evaluation
+ |'apply'|'applies'
+ )
+ (modifier=Modifier)?
+ ((theme_property_or_element=NonUIComponentInstance ) 
+   | theme_property_or_element_ref=[ClassOrLabelOrProperty|IDPointID] )
+ 
+ ('as' ((as_property=NonUIComponentInstance)
+   | as_property_or_entity_ref=[ClassOrLabelOrProperty|IDPointID]  )
+ )? //Not in VN
+   
+ (('for'|'to') predicate=STRING)? // then the System must select the  "next month period", and use "it" for "calculating the next NAV "
+ ('in' section=[ActorOrClassOrLabelOrProperty|ID])?//Not in VN
+ ('during' event_or_period_of_time=STRING)?//Not in VN	
+;
+
+ApplyFor: //e.g., When an existing legacy client applies for a new Vestima Prime account
+ verb=('apply'|'applies')
+ //(adverb_phrase = STRING)?
+ ('to' (modifier_to=Modifier)? entity_to=OfActorAndNonUIType)?
+ ('for' (modifier_for=Modifier)? apply_for=STRING)
+;
+
+
+
+CREATE_26_4:
+ verb=('calculate'|'calculates'| //Not in VNet
+   'recalculate'|'recalculates'| //not in VNet
+   'compute' |'computes' |
+   'publish' |'publishes' 
+ )
+ (modifier=Modifier)?	
+ (property=PropertyDef  | property_referenced =[PropertyOrLabel|IDPointID])//VN role called as Result
+ ('as' attribute=STRING)?//VN Role called Attribute
+ ('for' (modifier_for=Modifier)? beneficiary=STRING)?//VN
+ //(on=OnPhrase)?
+ ('based' 'on'|'using' artifact=STRING)?	
+ ('in' 'compliance' 'with' (article+=ArticleInLowercase)? rule=STRING )?// Not in VN
+ ('described' 'in' (article+=ArticleInLowercase)? rule_location=STRING)?
+;
+
+Split:
+ verb=('split'|'splits')
+ (modifier=Modifier)?
+ ( property=PropertyDef | property_referenced =[PropertyOrLabel|IDPointID])
+ ('into' pieces=STRING)?
+ 'using' separator=STRING
+;
+
+BEGIN_55_1 :
+ verb=(
+   'start'|'starts'| //Evaluation
+   'begin'|'begins'
+ )	
+ ( action_gerund = STRING | 
+  (modifier=Modifier 
+  task =STRING ))  //| theme_entity=[Class]  THEME
+;
+
+STOP_55_4:
+ verb=(		
+   'stop'|'stops'| //Evaluation 
+   'finish'|'finishes' //Evaluation		
+ )	
+ ( theme_action_ing = STRING | 
+ ( modifier=Modifier theme_task_task_entity =STRING | theme_entity=[Class]) )
+;
+
+DS_CANCEL:
+ verb=( 'cancel'|'cancels' )
+ (modifier=Modifier) action=STRING
+;
+
+/*
+* When a user searches for trades on an account in Vestima Prime GUI
+ */
+SEARCH_35_2:
+ verb= ('search'|'searches')	
+ 'for'
+ modifier=Modifier?
+ (location_property_or_entity+=STRING  (defined_in_type+=OfClassOrReferenceToLabel)?	|
+ location_ref+=[ClassOrProperty|IDPointID] ) 
+ ((','|'and'|'or') (location_property_or_entity+=STRING  (defined_in_type+=OfClassOrReferenceToLabel)?	|
+ location_ref+=[ClassOrProperty|IDPointID] ) )*
+ loc=PREPOSITION_LOC
+ theme=[Actor]
+;
+
+/*A technical mechanism of Ack and Nack to ensure that the Settlement request has been received by Vestima register must be put in place.Note that this technical mechanism must be described in a later stage (SDS level). */
+ESTABLISH_55_5_1:
+ verb = ('establish'|'establishes')
+ (modifier=Modifier)?
+ theme=STRING
+ ( 'with' instrument=STRING )?
+;
+
+DS_VALIDATE:
+ verb=(
+ 'validate'|'validates'|
+ 'check'|'checks')
+ //(adverb_phrase = STRING)? //@ commented due to left recursive error 
+ (validate_option= NonUIComponentInstanceOrClassToBeValidated | keyword_property = 'that' | action =STRING)	
+ (specific_check = PropertiesAndValues )?
+ ('following' (modifier=Modifier)? rule=STRING)?
+;
+
+NonUIComponentInstanceOrClassToBeValidated:
+ (modifier=Modifier)?
+ ( entity=NonUIComponentInstance
+   |
+ entity_ref=ClassRef)   //@entity_type=OfType	 
+ ('by' 'checking' 'that'  ) //| FreeExpression	
+;
+
+ENGENDER_27: 
+ verb=(
+   'create'|'creates' |
+   'generate' |'generates'|
+   'regenerate'|'regenerates' //domain specific verb  not in VbNet 
+   )	
+ (adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ instance=Instance	
+ ((','|'and')
+   (modifier2+=Modifier)?
+   instance2+=Instance		
+ )*
+ (in=InPhrase)?	
+ (engender_for=Engender_for)? 
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)? )?	
+;
+
+Engender_for:
+ 'for' (modifier_for=Modifier)? 
+ actor=[Actor]
+;
+
+Instance:
+ 
+ NonUIComponentInstance | UIComponentInstance 
+;
+
+NonUIComponentInstance://entity or property	
+ instance_name= STRING	//| ClassOrReferenceToLabel=[Class|ID])		  
+ (type = OfClassOrReferenceToLabel)?	//object can be an entity or property	
+ (label=Label)?
+;
+
+//InstanceText:;
+UIComponentInstance:
+ //'the' 'component' //@ removed to avoid using too many keywords
+ instance_name=STRING
+ ui_component_type = [UIComponent]
+ (('of'|'displayed' 'on')  ui_container_name=STRING (ui_container_type=[UIComponent])?)?
+ //(label=Label)?
+;
+ClassRef:
+ entity_ref+=[ClassOrLabel|ID]
+;
+
+PropertyDef:
+ property=STRING 
+ (defined_in_type=OfClassOrReferenceToLabel)?
+ label=Label?
+;
+PropertyRef:
+ property_ref =[PropertyOrLabel|IDPointID]
+;
+
+InPhrase :
+ keyword='in'
+ (modifier_1=Modifier)? actor_or_entity += ActorOrInstanceOrUIInstance
+ ((','|'and') (modifier_2+=Modifier)?  actor_or_entity += ActorOrInstanceOrUIInstance )* //(',_'|'and_') removed the "underscore" to make it more natural
+;
+
+OnPhrase:
+ keyword='on'
+ (modifier_1=Modifier)? actor_or_entity += ActorOrInstanceOrUIInstance
+ ((','|'and') (modifier_2+=Modifier)?  actor_or_entity += ActorOrInstanceOrUIInstance )*	
+;
+
+
+//When Vestima Prime Operations want to reverse a transaction on a client account, then CCS must give the user the possibility to select a 5, 6, 8 or 9-digit account number in the account field.
+OTHER_COS_45_4:
+ verb=('close'|'closes'|'reverse'|'reverses') //@alvaro correr ejemplo Doc2 of empiricall reverse
+ //(adverb_phrase = STRING)?
+ (modifier=Modifier)?
+ (ui_instance_to_close+= UIComponentInstance )
+ (connector+=('and'|'or') 
+   ui_instance_to_close += UIComponentInstance
+ )*	
+   
+;
+
+THROW_17_1:
+ verb= ('discard'|'discards')
+ (modifier=Modifier)?
+ theme=STRING
+ (src='from' initial_location=STRING)?
+ (dest='to' destination=STRING)?
+;
+
+TURN_26_6_1:
+ verb=(	
+ 'convert'|'converts'|
+ 'change'|'changes'|
+ 'transform'|'transforms'
+ //'update'|'updates'|  // Not in VN under this class 
+ //'set'|'sets' | //Not in VN using the correct sense. We need to check
+  )
+ //(adverb_phrase = STRING)?			
+ change+= PropertyInstanceOrValueAndItsChange ((','|'and') change+=PropertyInstanceOrValueAndItsChange)*
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)? )? //Not in VN
+;
+
+
+DS_UPDATE:
+ verb=(
+ 'update'|'updates'|  // Not in VN under this class 
+ 'set'|'sets'  //Not in VN using the correct sense. We need to check 
+ )
+ //(adverb_phrase = STRING)?		
+ ((change+= PropertyInstanceOrValueAndItsChange ((','|'and') change+=PropertyInstanceOrValueAndItsChange)*)| 
+ (updateMapping = UpdateMappingTable))
+ ('in' 'compliance' 'with'  rule=STRING ('described' 'in' rule_location=STRING)? )? //Not in VN
+ 
+;
+
+
+PropertyInstanceOrValueAndItsChange:
+ (modifier=Modifier)?	
+ patient=( UIComponentInstance |  NonUIComponentInstance | ChangePropertyReference )
+ ( toValue=IntoMaterial | fromValue=FromMaterialIntoResult )?
+;
+
+UpdateMappingTable:
+ class_reference = [Class] 'according' 'to' 'the' 
+ mapping_table = [Data_Mapping_Table] 'mapping' 'table'
+;
+
+ChangePropertyReference:
+ property_id =[PropertyId|IDPointID]
+;
+
+IntoMaterial:	
+ to_accept = ToAccept | to_the_value= ToTheValue | to_the_reference_value = ToTheReferencedValue
+ ('defined' 'in' (modifier=Modifier)? (belongs_to_entity=STRING | entityRef= [Label] ))?	
+;
+
+ToInclude : // more precise verb it is "concatenate"
+ 'to' 'include' value_new=STRING // value_new, e.g., a substring. 
+;
+ToAccept:  //Not in VN
+ 'to' 'accept'  result_new=STRING // value_new, e.g., accepts LuxCSD
+;
+
+ToTheValue :
+ 'into' (article=ArticleInLowercase)? (result_value_new=PropertyDef | result_entityRef= PropertyRef)
+;
+
+ToTheReferencedValue:
+ 'into' 'the' 'value' 'of' 'the' 'property' (result_property=PropertyDef  | result_property_ref =PropertyRef) 
+;
+
+FromMaterialIntoResult:
+ 'from' material=STRING 
+ 'into' result=STRING
+;
+
+PropertiesAndValues :
+ //ex=ConditionsOrExpression
+ expression += Expression
+ ((','|'and'|'or'|',' 'and'|',' 'or') expression+= Expression )*
+;
+
+Expression://see Condition that has a larger set of expressions.
+ InstanceHasProperties 
+ //| FreeExpression 
+ //ExternallyDefinedProperties 
+ | Convention 
+ | ActorOrTypeOrPropertyOperatorElement 
+ //| TypeOperatorElement //@merged  with the actorOperatorElement
+ //| InstanceOperatorElement//We only consider instances of Type
+ | InstanceOrPropertyOperatorValue 
+ | UIComponentInstanceOperatorElement// ElementOperatorElement
+;
