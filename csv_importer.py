@@ -9,19 +9,19 @@ class ProcessTextFile():
     def __init__(self) -> None:
         pass
 
-    # def load_csv(self, filename, col_value):
-    #     all_lines = []
-    #     with open(filename, mode='r') as csv_file:
-    #         csv_reader = csv.reader(csv_file, delimiter=';')
-    #         line_count = 0
-    #         for row in csv_reader:
-    #             if line_count == 0:
-    #                 print(f'Column names are {", ".join(row)}')
-    #                 line_count += 1
-    #             all_lines.append(row[0])
-    #             line_count += 1
-    #         print(f'Processed {line_count} lines.')
-    #     return all_lines
+    def load_csv(self, filename, col_value):
+        all_lines = []
+        with open(filename, mode='r') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=';')
+            line_count = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    print(f'Column names are {", ".join(row)}')
+                    line_count += 1
+                all_lines.append(row[0])
+                line_count += 1
+            print(f'Processed {line_count} lines.')
+        return all_lines
     
     def load_xml_file(self, filename, col_value):
 
