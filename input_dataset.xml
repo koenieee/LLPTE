@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acceptance_criterium>
+    <acceptance_criteria>
+        <scenario_name>Scenario 1: Requesting the cash from a creditworthy account</scenario_name>
+        <content>
+            Given: that the account is creditworthy
+            And: the card is valid
+            And: the dispenser contains cash
+            When: the customer requests the cash
+            Then: ensure the account is debited
+            And: ensure cash is dispensed
+            And: ensure the card is returned
+        </content>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 2: Money withdraw from bank account</scenario_name>
+        <content>
+            Given: my bank account is in credit, and I made no withdrawals recently
+            When: I attempt to withdraw an amount less than my card's limit
+            Then: the withdrawal should be complete without errors or warnings
+        </content>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 3: Requesting the cash from an overdrawn account</scenario_name>
+        <content>
+            Given: that the account is overdrawn
+            And: the card is valid
+            When: the customer requests the cash
+            Then: ensure the rejection message is displayed
+            And: ensure cash isn't dispensed
+        </content>
+    </acceptance_criteria>
+</acceptance_criterium>

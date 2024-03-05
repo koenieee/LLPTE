@@ -1,18 +1,22 @@
-import threading
 from llm_communicate import LLM_Communicator
-from openai import OpenAI
-import os
-from prompt_techniques import LLM_chain_of_thought, LLM_few_shot_learning, LLM_role_play
+from prompt_techniques import LLM_chain_of_thought, LLM_few_shot_learning, LLM_prompt_data, LLM_role_play
 
-def ask_different_prompts() -> str:
+def ask_different_prompts(input_text: str, prompt_tech: str) -> str:
+    prompt_data = LLM_prompt_data(input_text)
     llm_communicator = LLM_Communicator()
-    fsl_prompt = LLM_few_shot_learning()
-    cot_prompt = LLM_chain_of_thought()
-    rp_prompt = LLM_role_play()
-    result = llm_communicator.ask_llm_to_convert(fsl_prompt)
-    result = result + llm_communicator.ask_llm_to_convert(cot_prompt)
-    result = result + llm_communicator.ask_llm_to_convert(rp_prompt)
+    fsl_prompt = LLM_few_shot_learning(prompt_data)
+    cot_prompt = LLM_chain_of_thought(prompt_data)
+    rp_prompt = LLM_role_play(prompt_data)
+    result = ""
+    if prompt_tech.strip() == "Few-shot learning": #['Few-shot learning', 'Chain-of-thought', 'Role play']
+        result = llm_communicator.ask_llm_to_convert(fsl_prompt)
+    elif prompt_tech.strip() == "Chain-of-thought":
+        result = llm_communicator.ask_llm_to_convert(cot_prompt)
+    else: #Role play
+        result = llm_communicator.ask_llm_to_convert(rp_prompt)
+
+    #result = llm_communicator.ask_llm_to_convert(fsl_prompt)
+    #result = result + llm_communicator.ask_llm_to_convert(cot_prompt)
+    #result = result + llm_communicator.ask_llm_to_convert(rp_prompt)
     # finished_function(result)
     return result
-
-

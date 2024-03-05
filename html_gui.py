@@ -8,6 +8,11 @@ from contextlib import contextmanager
 from wrapper_calls import ask_different_prompts
 
 
+#['Few-shot learning', 'Chain-of-thought', 'Role play']
+translation_type = "Few-shot learning" #fsl, cot, rp
+input_text = ""
+current_result = 0
+
 echart = None
 def update():
     global echart
@@ -27,17 +32,25 @@ def generate_stats():
         ],
     })
 
+def set_input_text(text):
+    global input_text
+    input_text = text
 
 def make_intro_text():
+    global input_text
     ui.markdown('# Translate Gherkin to Rimay')
     ui.markdown("Uses different prompting techniques to translate Gherkin (Given When Then) into Rimay (CNL)")
+    ui.markdown("The following prompt techniques will be used:")
+    ui.markdown("* Few-shot learning")
+    ui.markdown("* Chain-of-thought")
+    ui.markdown("* Role-play")
+    with ui.card():
+        with ui.card_section():
+            ui.markdown("## Input Gherkin")
 
-    ui.markdown("## Input text")
-
-    ui.textarea(label='Text', placeholder='start typing',
-                on_change=lambda e: result.set_text('you typed: ' + e.value))
-    result = ui.label()
-
+            ui.textarea(label='Acceptance Criteria', placeholder='start typing',
+                        on_change=lambda e: set_input_text(e.value))
+            result = ui.label()
 
 def translation_buttons():
      with ui.card():
@@ -45,13 +58,15 @@ def translation_buttons():
 
             ui.markdown("### Translation technique")
             with ui.row():
-                ui.radio(['Few-shot learning', 'Chain-of-thought', 'Role play'], value='Few-shot learning', on_change=show).props('inline')
+                ui.radio(['Few-shot learning', 'Chain-of-thought', 'Role play'], value='Few-shot learning', on_change=show_translation_type).props('inline')
             ui.separator()
+            ui.html("<br>")
             ui.button('Translate', on_click=lambda e: start_translation(e.sender))
 
 
 def compare_translations():
-    ui.markdown("### Translation result")
+    ui.markdown("#### Translation result")
+    ui.markdown("The following translation happend from Gherkin to Rimay:")
     with ui.splitter() as splitter:
 
         with splitter.before:
@@ -63,12 +78,12 @@ def compare_translations():
 
 
 def paska_tooling_result():
-    ui.markdown("### Paska tooling output")
+    ui.markdown("#### Paska tooling output")
     ui.label('Test for paska tooing output.').classes('mr-40')
 
 
 def make_results(result):
-    ui.markdown("### Result translation")
+    ui.markdown("### Result translation " + str(current_result))
     ui.markdown("Result was: " + result)
 
     columns = [
@@ -95,9 +110,11 @@ def make_stats():
 
 
 
-def show(event: ValueChangeEventArguments):
+def show_translation_type(event: ValueChangeEventArguments):
+    global translation_type
     name = type(event.sender).__name__
-    ui.notify(f'{name}: {event.value}')
+    ui.notify(f'Selected {event.value}')
+    translation_type = event.value
 
 
 @contextmanager
@@ -108,25 +125,36 @@ def disable(button: ui.button):
     finally:
         button.enable()
 
+
+def show_all_results(response):
+    make_results(response)
+    paska_tooling_result()
+    compare_translations()
+    ui.html("<br>")
+
+    ui.separator().props('inline color=red')
+
+
+
 async def start_translation(button: ui.button):
-    URL = 'https://httpbin.org/delay/1'
-    response = await run.io_bound(ask_different_prompts)
-    ui.notify(f'Downloaded {response} bytes')
+    global current_result
+    button.disable()
+    ui.html("<br>")
+    current_result += 1
+    spinner = ui.spinner(size='lg', color='blue')
 
-# def start_translation(event: ValueChangeEventArguments):
-#     name = type(event.sender).__name__
-#     background_worker(make_results)
+    response = await run.io_bound(ask_different_prompts, input_text, translation_type)
+    button.enable()
+    spinner.delete()
+    show_all_results(response)
 
-#     ui.notify(f'Starting translation wait...')
 
 
 def setup_ui():
 
     make_intro_text()
     translation_buttons()
-    compare_translations()
 
-    paska_tooling_result() 
 
     #make_results()
 
