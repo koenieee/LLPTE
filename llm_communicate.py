@@ -44,9 +44,6 @@ class LLM_Communicator():
                 
             ]
         )
+        anwer_content = response['choices'][0]['message']['content']
 
-        print(response)
-        print(response['choices'][0]['message']['content'])
-
-
-        return "asdf"
+        return anwer_content

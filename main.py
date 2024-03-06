@@ -2,7 +2,7 @@
 
 
 import os
-from csv_importer import GherkinData
+from data_importer import GherkinData, RimayData
 from html_gui import setup_ui
 from nicegui import ui
 
@@ -24,8 +24,6 @@ client = None
 #/home/koebuntu/LLPTE/existing_research/paska/example/smells_koen/
 
 
-
-# paska_tool = Paska_tool()
 # paska_tool.check_rimay_requirement("When an order cancellation message is received from the System-A then Reason must be displayed in the Sytem-B GUI field 'Reason of Cancellation'.")
 # paska_tool.check_rimay_requirement("When the System-A receives a rejection message from System-B, Then it must transform it to the corresponding XML  message type and sent it to the System-C.")
 
@@ -41,4 +39,6 @@ for scenario in all_acceptance_criteria:
 setup_ui()
 ui.run()
 
+# rimay = RimayData()
+# print(rimay.load())
 

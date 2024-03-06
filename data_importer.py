@@ -9,8 +9,10 @@ class ProcessTextFile():
     def __init__(self) -> None:
         pass
 
-    def load_csv(self, filename, col_value):
+    def _load_csv_file(self, filename, items):
+
         all_lines = []
+        all_lines.append(items)
         with open(filename, mode='r') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';')
             line_count = 0
@@ -18,12 +20,17 @@ class ProcessTextFile():
                 if line_count == 0:
                     print(f'Column names are {", ".join(row)}')
                     line_count += 1
-                all_lines.append(row[0])
+                    continue
+                row_item = {}
+                for item in items:
+                    row_item[item] = row[items[item]]
+
+                all_lines.append(row_item)
                 line_count += 1
             print(f'Processed {line_count} lines.')
         return all_lines
     
-    def load_xml_file(self, filename, col_value):
+    def _load_xml_file(self, filename):
 
         root = ET.parse(filename)
         all_dicts = []
@@ -54,7 +61,7 @@ class GherkinData(ProcessTextFile, LLM_prompt_data):
         super().__init__()
 
     def load(self):
-        return super().load_xml_file("input_dataset.xml", "acceptance_criteria")
+        return super()._load_xml_file("input_dataset.xml")
     
     #save not implemented
 
@@ -65,6 +72,13 @@ class RimayData(ProcessTextFile, LLM_prompt_data):
         super().__init__()
     #load not implemented
     
+
+    def load(self):
+        items = {"Req Segment": 2, "Rimay Pattern":12, "Rimay Structure":13,  "Non-atomic requirement": 3, "Incomplete requirement": 4, "Incorrect order requirement": 5, "Coordination ambiguity": 6, "Not requirement": 7, "Incomplete condition": 8, "Incomplete system response":9, "Passive voice":10, "Not precise verb":11}
+
+        return super()._load_csv_file("./generated_data/output_smells/generated_rimay.csv.csv.csv", items)
+    
+
     def save(self):
         return super().save()
 

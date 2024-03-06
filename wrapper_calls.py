@@ -15,8 +15,4 @@ def ask_different_prompts(input_text: str, prompt_tech: str) -> str:
     else: #Role play
         result = llm_communicator.ask_llm_to_convert(rp_prompt)
 
-    #result = llm_communicator.ask_llm_to_convert(fsl_prompt)
-    #result = result + llm_communicator.ask_llm_to_convert(cot_prompt)
-    #result = result + llm_communicator.ask_llm_to_convert(rp_prompt)
-    # finished_function(result)
     return result

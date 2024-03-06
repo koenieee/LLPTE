@@ -49,27 +49,33 @@ class Paska_tool():
             csvwriter = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_ALL)
             csvwriter.writerows(data)
 
-    def run_process(self, input_args: list):
+    def run_process(self, input_args: list) -> str:
         process = Popen(input_args, stdout=PIPE, stderr=PIPE) #["conda activate smell-detector"]+
         result = process.communicate()
         print("Result STDOUT: "+ result[0].decode('utf-8'))
         print("Result STDERR: "+ result[1].decode('utf-8'))
+        return result[0].decode('utf-8')
+        
 
 
-    def preprocess_paska(self):
+    def preprocess_paska(self) -> str:
         all_args = ["python", self.preproces_tool, self.input_folder_req, self.output_folder_pre]
-        self.run_process(all_args)
+        return self.run_process(all_args)
 
-    def start_paska_tool(self):
+    def start_paska_tool(self) -> str:
         all_args = ["java", "-jar", self.java_tool, self.output_folder_pre, self.output_folder_smells, self.pos_tagger_file]
-        self.run_process(all_args)
+        return self.run_process(all_args)
 
 
     def check_rimay_requirement(self, requirement: str):
+        self.clear_all_requirements()
+        #/home/koebuntu/LLPTE/generated_data/output_smells/generated_rimay.csv.csv.csv
         self.write_input_file(uuid.uuid4(), requirement)
         self.preprocess_paska()
-        self.start_paska_tool()
+        return self.start_paska_tool()
 
 
+    def clear_all_requirements(self):
+        self.__init_directories()
 
 
