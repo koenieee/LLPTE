@@ -79,3 +79,32 @@ class Paska_tool():
         self.__init_directories()
 
 
+
+class RimayDSL():
+
+    def __init__(self) -> None:
+        self.java_exe = "/home/koebuntu/eclipse//plugins/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64_17.0.6.v20230204-1729/jre/bin/java"
+        self.jar_exe = "/home/koebuntu/LLPTE/existing_research/dsl_rimay-master/rimay_validator_dsl.jar"
+        self.test_rimay_file = "/home/koebuntu/LLPTE/generated_data/dsl_check.rimay"
+
+    def write_input_file(self, rimay_requirement:str):
+        f = open(self.test_rimay_file, "w")
+        f.write(rimay_requirement)
+        f.close()    
+
+    def execute_tool(self):
+        all_args = [self.java_exe, "-jar",  self.jar_exe, self.test_rimay_file]
+        return self._run_java(all_args)
+    
+    def check_rimay_comf_dsl(self, rimay_requirement:str):
+        self.write_input_file(rimay_requirement)
+        return self.execute_tool()
+
+    def _run_java(self, input_args:list):
+        process = Popen(input_args, stdout=PIPE, stderr=PIPE) #["conda activate smell-detector"]+
+        result = process.communicate()
+        print("Result STDOUT: "+ result[0].decode('utf-8'))
+        print("Result STDERR: "+ result[1].decode('utf-8'))
+
+        return (result[0].decode('utf-8'), result[1].decode('utf-8'))
+        

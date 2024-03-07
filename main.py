@@ -7,7 +7,7 @@ from html_gui import setup_ui
 from nicegui import ui
 
 
-from rimay_verification import Paska_tool
+from rimay_verification import Paska_tool, RimayDSL
 
 client = None
 
@@ -28,16 +28,25 @@ client = None
 # paska_tool.check_rimay_requirement("When the System-A receives a rejection message from System-B, Then it must transform it to the corresponding XML  message type and sent it to the System-C.")
 
 #all gherkin data.
-csv_importer = GherkinData() #GherkinData
-all_acceptance_criteria = csv_importer.load()
+# csv_importer = GherkinData() #GherkinData
+# all_acceptance_criteria = csv_importer.load()
 
-for scenario in all_acceptance_criteria:
-    print(scenario["scenario_name"])
-    print(scenario["content"])
-    print("=================")
+# for scenario in all_acceptance_criteria:
+#     print(scenario["scenario_name"])
+#     print(scenario["content"])
+#     print("=================")
 
-setup_ui()
-ui.run()
+# setup_ui()
+# ui.run()
+
+dsl = RimayDSL()
+print(dsl.check_rimay_comf_dsl("""
+Actors: actor SystemA, actor SystemB, actor SystemC, actor X
+Classes: class Instruction := description record, class Y
+
+When SystemB receives an "email alert" from SystemA, SystemB must send an Instruction to SystemC.
+"""))
+
 
 # rimay = RimayData()
 # print(rimay.load())

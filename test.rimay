@@ -1,0 +1,6 @@
+Actors: actor SystemA, actor SystemB, actor SystemC, actor X
+Classes: class Instruction := description record, class Y
+
+When SystemB receives an "email alert" from SystemA, SystemB must send an Instruction to SystemC.
+
+When the System-A receives a rejection message from System-B

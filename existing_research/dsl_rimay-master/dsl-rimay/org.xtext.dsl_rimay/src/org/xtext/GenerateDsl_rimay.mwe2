@@ -38,6 +38,9 @@ Workflow {
 			junitSupport = {
 				junitVersion = "5"
 			}
+			generator = {
+				generateJavaMain = true
+			}
 		}
 	}
 }

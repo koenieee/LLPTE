@@ -1,0 +1,10 @@
+Actors: actor SystemA, actor SystemB, actor SystemC, actor X
+Classes: class Instruction := description record, class Y
+
+When SystemB receives an "email alert" from SystemA, SystemB must send an Instruction to SystemC.
+
+//When the SystemA receives a rejection message from SystemB, then it must transform it to the corresponding XML message type and sent it to the SystemC.
+//When an order cancellation message is received from the SystemA then Reason must be displayed in the SystemB GUI field 'Reason of Cancellation'.
+
+
+The User must upload the "excel file" to the "SystemA".
