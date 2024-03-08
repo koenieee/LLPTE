@@ -145,8 +145,8 @@ def compare_translations():
             ui.markdown("#### Gherkin").classes('mr-40')
             ui.html(input_text.replace("\n", "<br>")).classes('font-mono w-70')
         with splitter.after:
-            ui.markdown("#### Rimay").classes('ml-40')
-            ui.label(rimay_text).classes('font-mono ml-40')
+            ui.markdown("#### Rimay").classes('ml-5')
+            ui.label(rimay_text).classes('font-mono ml-5')
 
 
 
@@ -233,7 +233,9 @@ def disable(button: ui.button):
 
 
 def show_llm_results(response):
+    global start_rimay_text
     global rimay_text
+    start_rimay_text = response
     rimay_text = response
     compare_translations()
     ui.html("<br>")

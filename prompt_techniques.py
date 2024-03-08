@@ -35,18 +35,67 @@ class LLM_few_shot_learning(LLM_prompt_technique, LLM_prompt_data):
 
     def allowed_word_list(self):
         return str("""
-The following list is a list of different types and structures that can be used to formulete Rimay:
+This list of variables is important and can be used to formulete Rimay:
+Only make use of the following words:
 
-$Operators="is, are, equal, equals, greater than, less than, has, have, contain, contains, do, does"
-$Frequently="every"
-$RepeatOnce="before, after"
-$IfStructure="if, and, or, not"
-$OfClassOrReferenceToLabel="of"
-$AllowProperty="permit, permits, accept, acepts, allow, allows"
-$AvailableFor="is, are"
-$ModalVerb="shall, must"
-$ArticleInLowercase="a, an, the"
-$ResponseBlockItemized="do, the, following, actions"
+$Operators = "is, are, equal, equals, greater than, less than, has, have, contain, contains, do, does"
+$Frequently = "every"
+$RepeatOnce = "before, after"
+$IfStructure = "if, and, or, not"
+$OfClassOrReferenceToLabel = "of"
+$AllowProperty = "permit, permits, accept, acepts, allow, allows"
+$AvailableFor = "is, are"
+$ModalVerb = "shall, must"
+$ArticleInLowercase = "a, an, the"
+$ResponseBlockItemized = "do, the, following, actions"
+$Rule_ADMIT = "exclude,excludes"
+$Rule_ADVISE = "instruct,instructs"
+$Rule_ALLOW = "allow,allows,authorize,authorizes"
+$Rule_BEG = "request,requests"
+$Rule_BEGIN = "start,starts,begin,begins"
+$Rule_CANCEL = "cancel,cancels"
+$Rule_CONCEALMENT = "hide,hides"
+$Rule_CONTRIBUTE = "restore, restores"
+$Rule_CREATE = "compute,computes,publish,publishes" 
+$Rule_ENABLE_DISABLE = "enable,disable"
+$Rule_ENFORCE = "enforce,enforces"
+$Rule_ENGENDER = "create,creates,generate,generates"
+$Rule_EXCHANGE = "replace,replaces"
+$Rule_FORBID = "prevent,prevents"
+$Rule_GET_FROM = "download,downloads"
+$Rule_HERD = "aggregate,aggregates"
+$Rule_INTERRUPT = "interrupt,interrupts"
+$Rule_INVOLVE = "include,includes"
+$Rule_KEEP = "store,stores,property,properties,value,values"
+$Rule_LIMIT = "limit,limits,restrict,restricts,reduce,reduces"
+$Rule_MIGRATE = "migrate,migrates"
+$Rule_MIX_ADD = "add,adds" 
+$Rule_MIX_LINK = "link,links" 
+$Rule_NEGLECT = "neglect,neglects,ignore,ignores"
+$Rule_OBTAIN = "accept,accepts,receive,receives,retrieve,retrieves"
+$Rule_Other_COS = "close,closes,reverse,reverses"
+$Rule_PUT = "insert,inserts"
+$Rule_REFLEXIVE_APPEARANCE = "display,displays,show,shows"
+$Rule_REMOVE = "extract,extracts,remove,removes,delete,deletes,deduct,deducts"
+$Rule_SAY = "report,reports,propose,proposes"
+$Rule_SEE = "detect,detects"
+$Rule_SELECT_UNSELECT = "select,selects,unselect,unselects"
+$Rule_SEND = "return,returns,send,sends,forward,forward,pass,passes,export,exports"
+$Rule_SHAKE = "concatenate,concatenates"
+$Rule_SYNCHRONIZE = "synchronize,synchronizes"
+$Rule_THROW = "discard,discards"
+$Rule_TRANSCRIBE = "copy,copies"
+$Rule_TURN = "convert,converts,change,changes,transform,transforms"
+$Rule_UPDATE = "update,updates,set,sets"
+$Rule_USE = "use,uses,apply,applies"
+$Rule_VALIDATE = "validate,validates,check,checks"
+$Rule_CALCULATE = "calculate,calculates,recalculate,recalculates"
+$Rule_ESTABLISH = "establish,establishes"
+$Rule_SEARCH = "search,searches"
+$Rule_SPLIT = "split,splits"
+$Rule_STOP = "stop,stops,finish,finishes"
+$Rule_SUBSCRIBE = "subscribe,subscribes"
+$Rule_UPLOAD = "upload,uploads"
 """)
 
 
@@ -64,11 +113,11 @@ $ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirement
 Replace the variables with the right text according the input acceptance criteria.
 In the following order: 
 
-Rimay CNL: $WHEN_STRUCTURE  $ACTOR   $MODAL_VERB     $SYSTEM_RESPONSE
+Rimay CNL definition: $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
 
+{self.allowed_word_list()}
 
-Important rule, only use the following input words, defined as variables: {self.allowed_word_list()}
-if you want to use another word, put if between quotes.
+Important extra rule: if the word is not defined in the list above, put if between quotes.
 
 The following example is a valid Rimay CNL:
 
