@@ -106,5 +106,5 @@ class RimayDSL():
         print("Result STDOUT: "+ result[0].decode('utf-8'))
         print("Result STDERR: "+ result[1].decode('utf-8'))
 
-        return (result[0].decode('utf-8'), result[1].decode('utf-8'))
+        return (result[0].decode('utf-8'), result[1].decode('utf-8').replace("(file:/home/koebuntu/LLPTE/generated_data/dsl_check.rimay ", "("))
         

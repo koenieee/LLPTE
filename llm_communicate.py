@@ -16,25 +16,7 @@ class LLM_Communicator():
 
 
     def ask_llm_to_convert(self, question: LLM_prompt_technique):
-        print(repr(question))
-        # time.sleep(3)
-        # return "baaall"
-
-        #  {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
-        #     {"role": "user", "content": "Who won the world series in 2020?"}
-        # https://platform.openai.com/docs/guides/prompt-engineering
-        # chat_completion = self.client.chat.completions.create(
-        #     messages=[
-        #         {
-                    
-        #             "role": "user",
-        #             "content": str(question),
-        #         }
-        #     ],
-        #     model="gpt-3.5-turbo",
-        # )
-        # answer = chat_completion.choices[0].message.content
-
+        print(str(question))
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", # engine = "deployment_name".
