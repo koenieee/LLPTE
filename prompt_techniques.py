@@ -14,6 +14,8 @@ class LLM_prompt_data():
 
 
 
+#https://www.promptingguide.ai/techniques/fewshot
+
 class LLM_prompt_technique:
     def __init__(self, input_obj:LLM_prompt_data, quest: str):
         self.input_obj = input_obj
@@ -26,8 +28,14 @@ class LLM_prompt_technique:
         return f"""
 {self.question}
 
-Use the following Gherkin acceptance criteria input data and translate into Rimay: \n{self.input_obj}
-Output only your generated Rimay text and nothing else!
+### Input Data
+Use the following Gherkin acceptance criteria input data: \n{self.input_obj}
+
+### Question:
+Can you translate the inputdata above into the specified language Rimay CNL?
+
+### Output indicator
+Output only your translated Rimay CNL text and nothing else!
 """
     
 
@@ -38,69 +46,31 @@ class LLM_few_shot_learning(LLM_prompt_technique, LLM_prompt_data):
 This list of variables is important and can be used to formulete Rimay:
 Only make use of the following words:
 
-$Operators = "is, are, equal, equals, greater than, less than, has, have, contain, contains, do, does"
-$Frequently = "every"
-$RepeatOnce = "before, after"
-$IfStructure = "if, and, or, not"
-$OfClassOrReferenceToLabel = "of"
-$AllowProperty = "permit, permits, accept, acepts, allow, allows"
-$AvailableFor = "is, are"
-$ModalVerb = "shall, must"
-$ArticleInLowercase = "a, an, the"
-$ResponseBlockItemized = "do, the, following, actions"
-$Rule_ADMIT = "exclude,excludes"
-$Rule_ADVISE = "instruct,instructs"
-$Rule_ALLOW = "allow,allows,authorize,authorizes"
-$Rule_BEG = "request,requests"
-$Rule_BEGIN = "start,starts,begin,begins"
-$Rule_CANCEL = "cancel,cancels"
-$Rule_CONCEALMENT = "hide,hides"
-$Rule_CONTRIBUTE = "restore, restores"
-$Rule_CREATE = "compute,computes,publish,publishes" 
-$Rule_ENABLE_DISABLE = "enable,disable"
-$Rule_ENFORCE = "enforce,enforces"
-$Rule_ENGENDER = "create,creates,generate,generates"
-$Rule_EXCHANGE = "replace,replaces"
-$Rule_FORBID = "prevent,prevents"
-$Rule_GET_FROM = "download,downloads"
-$Rule_HERD = "aggregate,aggregates"
-$Rule_INTERRUPT = "interrupt,interrupts"
-$Rule_INVOLVE = "include,includes"
-$Rule_KEEP = "store,stores,property,properties,value,values"
-$Rule_LIMIT = "limit,limits,restrict,restricts,reduce,reduces"
-$Rule_MIGRATE = "migrate,migrates"
-$Rule_MIX_ADD = "add,adds" 
-$Rule_MIX_LINK = "link,links" 
-$Rule_NEGLECT = "neglect,neglects,ignore,ignores"
-$Rule_OBTAIN = "accept,accepts,receive,receives,retrieve,retrieves"
-$Rule_Other_COS = "close,closes,reverse,reverses"
-$Rule_PUT = "insert,inserts"
-$Rule_REFLEXIVE_APPEARANCE = "display,displays,show,shows"
-$Rule_REMOVE = "extract,extracts,remove,removes,delete,deletes,deduct,deducts"
-$Rule_SAY = "report,reports,propose,proposes"
-$Rule_SEE = "detect,detects"
-$Rule_SELECT_UNSELECT = "select,selects,unselect,unselects"
-$Rule_SEND = "return,returns,send,sends,forward,forward,pass,passes,export,exports"
-$Rule_SHAKE = "concatenate,concatenates"
-$Rule_SYNCHRONIZE = "synchronize,synchronizes"
-$Rule_THROW = "discard,discards"
-$Rule_TRANSCRIBE = "copy,copies"
-$Rule_TURN = "convert,converts,change,changes,transform,transforms"
-$Rule_UPDATE = "update,updates,set,sets"
-$Rule_USE = "use,uses,apply,applies"
-$Rule_VALIDATE = "validate,validates,check,checks"
-$Rule_CALCULATE = "calculate,calculates,recalculate,recalculates"
-$Rule_ESTABLISH = "establish,establishes"
-$Rule_SEARCH = "search,searches"
-$Rule_SPLIT = "split,splits"
-$Rule_STOP = "stop,stops,finish,finishes"
-$Rule_SUBSCRIBE = "subscribe,subscribes"
-$Rule_UPLOAD = "upload,uploads"
+is, are, equal, equals, greater than, less than, has, have, contain, contains, do, does, every, 
+before, after, if, and, or, not, of, permit, permits, accept, acepts, allow, allows, is, are, shall, must, 
+a, an, the, do, the, following, actions, exclude, excludes, instruct, instructs, 
+allow, allows, authorize, authorizes, request, requests, 
+start, starts, begin, begins, cancel, cancels, hide, hides, 
+restore, restores, compute, computes, publish, publishes, enable, disable, 
+enforce, enforces, create, creates, generate, generates, replace, replaces, 
+prevent, prevents, download, downloads, aggregate, aggregates, 
+interrupt, interrupts, include, includes, store, stores, property, properties, value, values, 
+limit, limits, restrict, restricts, reduce, reduces, migrate, migrates, 
+add, adds, link, links, neglect, neglects, ignore, ignores, accept, accepts, receive, receives, retrieve, retrieves, 
+close, closes, reverse, reverses, insert, inserts, display, displays, show, shows, 
+extract, extracts, remove, removes, delete, deletes, deduct, deducts, report, reports, propose, proposes, 
+detect, detects, select, selects, unselect, unselects, return, returns, send, sends, forward, forward, pass, passes, export, exports, 
+concatenate, concatenates, synchronize, synchronizes, discard, discards, copy, copies, 
+convert, converts, change, changes, transform, transforms, update, updates, set, sets, 
+use, uses, apply, applies, validate, validates, check, checks, calculate, calculates, recalculate, recalculates
+establish, establishes, search, searches, split, splits, stop, stops, finish, finishes
+subscribe, subscribes, upload, uploads
 """)
 
 
     def __init__(self, input: LLM_prompt_data):
         prompt_method = f"""
+### Context
 The following syntax structure is called Rimay, this is a CNL (Controlled Natural Language):
 
 $ACTOR is for example a thing or a person.
@@ -115,9 +85,11 @@ In the following order:
 
 Rimay CNL definition: $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
 
+really important rule, make only use of the following word list:
 {self.allowed_word_list()}
 
 Important extra rule: if the word is not defined in the list above, put if between quotes.
+DO NOT WRITE ANY OTHER WORDS THAN THE DEFINED WORD LIST!
 
 The following example is a valid Rimay CNL:
 
@@ -127,8 +99,16 @@ With the usage of the following extra information:
 Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, actor UserC
 Classes: class Instruction := description record, class Y
 
+THIS IS NOT VALID RIMAY:
+When UserA navigates to the login page, UserA clicks on button, SystemA must refresh the page.
 
-Can you convert the following Gherkin input into the Rimay CNL output?
+
+The following example would be valid:
+When UserA "navigates to the login page", UserA "clicks on button", SystemA must "refresh the page".
+
+
+
+
         """
         super().__init__( input, prompt_method)
 
@@ -167,6 +147,19 @@ class LLM_chain_of_thought(LLM_prompt_technique, LLM_prompt_data):
 
         """
         super().__init__(input, prompt_method)
+
+
+# Perhaps one of the more interesting things you can achieve with prompt engineering is instructing the LLM system on how to behave, its intent, and its identity. This is particularly useful when you are building conversational systems like customer service chatbots.
+
+# For instance, let's create a conversational system that's able to generate more technical and scientific responses to questions. Note how you are explicitly telling it how to behave through the instruction. This is sometimes referred to as role prompting.
+
+# Prompt:
+
+# The following is a conversation with an AI research assistant. The assistant tone is technical and scientific.
+# Human: Hello, who are you?
+# AI: Greeting! I am an AI research assistant. How can I help you today?
+# Human: Can you tell me about the creation of blackholes?
+
 
 
 class LLM_role_play(LLM_prompt_technique, LLM_prompt_data) : 

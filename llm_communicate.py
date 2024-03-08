@@ -20,6 +20,7 @@ class LLM_Communicator():
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", # engine = "deployment_name".
+            temperature=0.2,
             messages=[
                 
                 {"role": "user", "content": str(question)},
