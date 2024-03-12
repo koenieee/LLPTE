@@ -84,6 +84,10 @@ def set_rimay_text(text):
     global rimay_text
     rimay_text = text
 
+async def start_getting_results(sender):
+    await start_rimay_dsl_syntax(sender)
+    await start_rimay_verification(sender)
+
 def make_rimay_input_text():
     with ui.card():
         with ui.card_section().style('width: 800px'):
@@ -98,8 +102,8 @@ def make_rimay_input_text():
             result = ui.label()
             ui.html("<br>")
             with ui.row():
-                ui.button('Check Rimay Paska', on_click=lambda e: start_rimay_verification(e.sender))
-                ui.button('Check Rimay DSL', on_click=lambda e: start_rimay_dsl_syntax(e.sender))
+                ui.button('Check Rimay Paska', on_click=lambda e: start_getting_results(e.sender))
+                #ui.button('Check Rimay DSL', on_click=lambda e: start_rimay_dsl_syntax(e.sender))
             ui.html("<br>")
 
             
@@ -167,10 +171,11 @@ def rimay_dsl_result(response):
 
 def paska_tooling_result(response):
     ui.markdown("#### Paska tooling output")
-    ui.label('Paska output.').classes('mr-40')
+    ui.html("<br>")
+    ui.markdown('Paska output.').classes('mr-40')
     ui.separator()
     ui.html("<br>")
-    ui.label("The result was: " + response).classes('font-mono w-70')
+    ui.label(response).classes('font-mono w-70')
     rimay = RimayData()
     ui.html("<br>")
     ui.html("<br>")
@@ -266,6 +271,7 @@ async def start_translation(button: ui.button):
     button.enable()
     spinner.delete()
     show_llm_results(response)
+    await start_getting_results(button)
     
 
 async def start_rimay_dsl_syntax(button: ui.button):

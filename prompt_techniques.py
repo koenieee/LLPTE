@@ -22,7 +22,8 @@ class LLM_prompt_technique:
         self.question = quest
         pass
 
-
+    def name(self) -> str:
+        return ""
 
     def __str__(self) -> str:
         return f"""
@@ -40,6 +41,10 @@ Output only your translated Rimay CNL text and nothing else!
     
 
 class LLM_few_shot_learning(LLM_prompt_technique, LLM_prompt_data):
+
+    def name(self) -> str:
+        return "Few-Shot Learning"
+
 
     def allowed_word_list(self):
         return str("""
@@ -102,13 +107,8 @@ Classes: class Instruction := description record, class Y
 THIS IS NOT VALID RIMAY:
 When UserA navigates to the login page, UserA clicks on button, SystemA must refresh the page.
 
-
 The following example would be valid:
 When UserA "navigates to the login page", UserA "clicks on button", SystemA must "refresh the page".
-
-
-
-
         """
         super().__init__( input, prompt_method)
 
@@ -117,6 +117,10 @@ When UserA "navigates to the login page", UserA "clicks on button", SystemA must
 
 
 class LLM_chain_of_thought(LLM_prompt_technique, LLM_prompt_data):
+
+    def name(self) -> str:
+        return "Chain of Thought"
+
     def __init__(self, input: LLM_prompt_data):
         prompt_method = """
         Learn from the following example, the output information for the CNL Rimay is: 
@@ -163,6 +167,10 @@ class LLM_chain_of_thought(LLM_prompt_technique, LLM_prompt_data):
 
 
 class LLM_role_play(LLM_prompt_technique, LLM_prompt_data) : 
+
+    def name(self) -> str:
+        return "Role Play"
+
     def __init__(self, input: LLM_prompt_data):
         prompt_method = """
         Behave like a person who writes the Controlled Natural Language (CNL) Rimay.

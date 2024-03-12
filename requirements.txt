@@ -1,5 +1,0 @@
-openai
-tk
-matplotlib
-bokeh
-nicegui
