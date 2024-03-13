@@ -13,25 +13,22 @@ class LLM_Communicator():
 
     def __init__(self) -> None:
         self.client = None
-        self.log_file_prompting = "./logfile_llm_prompt.md"
+        self.question = None
+        self.answer = None
 
-    def write_to_file(self, input_prompt: LLM_prompt_technique, output_result: str):
-        f = open(self.log_file_prompting, "a")
-        f.write("\n")
-        
-        f.write(f"### Input prompt, technique: {input_prompt.name()}\n")
-        f.write("\n```\n")
-        f.write(str(input_prompt))
-        f.write("\n```\n")
-        f.write("### Output result \n")
-        f.write(output_result)
-        
-        f.write("\n")
-        f.close()    
-
+    def write_log_output(self, log: ResearchLogger):
+        if log != None: 
+            log.append_result(self.question)
+            log.append_result(self.anwer)
+            self.question = None
+            self.answer = None
+        else:
+            print("LLM_Communicator: Error no logger found")
 
 
     def ask_llm_to_convert(self, question: LLM_prompt_technique):
+        self.question = question
+
         print(str(question))
 
         response = openai.ChatCompletion.create(
@@ -45,5 +42,6 @@ class LLM_Communicator():
         )
         anwer_content = response['choices'][0]['message']['content']
 
-        self.write_to_file(question, anwer_content)
+        self.answer = anwer_content
+
         return anwer_content

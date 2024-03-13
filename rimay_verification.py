@@ -21,6 +21,7 @@ class Paska_tool():
 
 
         self.__init_directories()
+        self.final_result = None
 
     def __init_directories(self):
         shutil.rmtree(self.output_folder)
@@ -72,11 +73,20 @@ class Paska_tool():
         #/home/koebuntu/LLPTE/generated_data/output_smells/generated_rimay.csv.csv.csv
         self.write_input_file(uuid.uuid4(), requirement)
         self.preprocess_paska()
-        return self.start_paska_tool()
+        self.final_result = self.start_paska_tool()
+        return self.final_result
 
 
     def clear_all_requirements(self):
         self.__init_directories()
+
+    def write_log_output(self, log: ResearchLogger):
+        if log != None:
+            log.append_result(self.final_result)
+
+            self.final_result = None
+        else:
+            print("RimayDSL Error: no logger found")
 
 
 
@@ -86,6 +96,7 @@ class RimayDSL():
         self.java_exe = "/home/koebuntu/eclipse//plugins/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64_17.0.6.v20230204-1729/jre/bin/java"
         self.jar_exe = "/home/koebuntu/LLPTE/existing_research/dsl_rimay-master/rimay_validator_dsl.jar"
         self.test_rimay_file = "/home/koebuntu/LLPTE/generated_data/dsl_check.rimay"
+        self.result = None
 
     def write_input_file(self, rimay_requirement:str):
         f = open(self.test_rimay_file, "w")
@@ -105,6 +116,15 @@ class RimayDSL():
         result = process.communicate()
         print("Result STDOUT: "+ result[0].decode('utf-8'))
         print("Result STDERR: "+ result[1].decode('utf-8'))
+        self.result = (result[0].decode('utf-8'), result[1].decode('utf-8').replace("(file:/home/koebuntu/LLPTE/generated_data/dsl_check.rimay ", "("))
 
-        return (result[0].decode('utf-8'), result[1].decode('utf-8').replace("(file:/home/koebuntu/LLPTE/generated_data/dsl_check.rimay ", "("))
+        return self.result
         
+                
+    def write_log_output(self, log: ResearchLogger):
+        if log != None:
+            log.append_result(self.result)
+
+            self.result = None
+        else:
+            print("RimayDSL Error: no logger found")

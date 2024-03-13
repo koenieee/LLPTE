@@ -11,6 +11,12 @@ from rimay_verification import Paska_tool, RimayDSL
 
 client = None
 
+
+# Read all gherkin data
+# Score systeem.
+# Log all outputs
+# improve prompt techniques.
+
     
 #all gherkin data.
 csv_importer = GherkinData() #GherkinData

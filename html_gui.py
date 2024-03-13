@@ -51,7 +51,11 @@ rimay_text = start_rimay_text
 rimay_actor_text = start_rimay_actors
 
 
+current_logger = ResearchLogger()
+
 echart = None
+
+
 def update():
     global echart
     echart.options['series'][0]['data'][0] = random()
@@ -85,8 +89,8 @@ def set_rimay_text(text):
     rimay_text = text
 
 async def start_getting_results(sender):
-    await start_rimay_dsl_syntax(sender)
-    await start_rimay_verification(sender)
+    await start_rimay_dsl_verification(sender)
+    await start_paska_verification(sender)
 
 def make_rimay_input_text():
     with ui.card():
@@ -103,7 +107,7 @@ def make_rimay_input_text():
             ui.html("<br>")
             with ui.row():
                 ui.button('Check Rimay Paska', on_click=lambda e: start_getting_results(e.sender))
-                #ui.button('Check Rimay DSL', on_click=lambda e: start_rimay_dsl_syntax(e.sender))
+                #ui.button('Check Rimay DSL', on_click=lambda e: start_rimay_dsl_verification(e.sender))
             ui.html("<br>")
 
             
@@ -266,15 +270,17 @@ async def start_translation(button: ui.button):
     ui.html("<br>")
     current_result += 1
     spinner = ui.spinner(size='lg', color='blue')
+    current_logger.start_new_translation()
 
     response = await run.io_bound(ask_different_prompts, input_text.strip(), translation_type)
     button.enable()
     spinner.delete()
     show_llm_results(response)
+
     await start_getting_results(button)
     
 
-async def start_rimay_dsl_syntax(button: ui.button):
+async def start_rimay_dsl_verification(button: ui.button):
     global current_result
     button.disable()
     ui.html("<br>")
@@ -286,27 +292,22 @@ async def start_rimay_dsl_syntax(button: ui.button):
     spinner.delete()
     rimay_dsl_result(response)
     ui.html("<br>")
+    current_logger.append_result(response)
 
 
-async def start_rimay_verification(button: ui.button):
+async def start_paska_verification(button: ui.button):
     global current_result
     button.disable()
     ui.html("<br>")
     current_result += 1
     spinner = ui.spinner(size='lg', color='blue')
-    #paska_tool.check_rimay_requirement("When an order cancellation message is received from the System-A then Reason must be displayed in the Sytem-B GUI field 'Reason of Cancellation'.")
+
     response = await run.io_bound(paska_tool.check_rimay_requirement, rimay_text.strip().replace("\n",""))
     button.enable()
     spinner.delete()
     show_rimay_results(response)
     ui.html("<br>")
-
-
-    
-
-
-
-
+    current_logger.append_result(response)
 
 
 def setup_ui():
