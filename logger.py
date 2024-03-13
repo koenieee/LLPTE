@@ -1,38 +1,36 @@
 from prompt_techniques import LLM_prompt_technique
-
+from datetime import datetime
+import uuid
 
 class ResearchLogger():
     
-    def __init__(self) -> None:
-        self.log_file_prompting = "./logfile_llm_prompt.md"
+    def __init__(self, prefix_name) -> None:
+        self.log_directory = "prompt_logging/"
+        self.timestamp = datetime.now().strftime("%m_%d_%Y__%H:%M:%S")
+        self.prefix = prefix_name
+        self.log_file = f"{self.log_directory}/{self.prefix}_{self.timestamp}.md"
+        self.file_contents = ""
+        self.write_header()
 
-    def write_header():
-        #Timestamp
-        #Browserinstance name
-        #
+    def write_header(self):
+        self.file_contents += f"""
 
-    def write_to_file(self, input_prompt: LLM_prompt_technique, output_result: str):
-        f = open(self.log_file_prompting, "a")
-        f.write("\n")
-        
-        f.write(f"### Input prompt, technique: {input_prompt.name()}\n")
-        f.write("\n```\n")
-        f.write(str(input_prompt))
-        f.write("\n```\n")
-        f.write("### Output result \n")
-        f.write(output_result)
-        
-        f.write("\n")
+# LLM Experiment Information
+* Prefix:   {self.prefix}
+* Datetime: {self.timestamp}
+* UniqueID: {uuid.uuid4()}
+
+        """
+        self.write_to_file()
+
+    def write_to_file(self):
+        f = open(self.log_file, "a")
+        f.write(self.file_contents)
+        self.file_contents = ""
         f.close()    
 
-    def start_new_translation():
-        pass
 
-    def append_dsl_result(result):
-        #check if current translation is active
-        pass
-
-    def append_paska_result(result):
-        #check if current translation is active
-        pass
+    def append_result(self, result):
+        self.file_contents += f"\n{result}\n"
+        self.write_to_file()
 

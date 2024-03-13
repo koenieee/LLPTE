@@ -5,6 +5,7 @@ from nicegui import run, ui
 from random import random
 from contextlib import contextmanager
 from data_importer import RimayData
+from logger import ResearchLogger
 from rimay_verification import Paska_tool, RimayDSL
 
 from wrapper_calls import ask_different_prompts
@@ -51,7 +52,7 @@ rimay_text = start_rimay_text
 rimay_actor_text = start_rimay_actors
 
 
-current_logger = ResearchLogger()
+current_logger = None
 
 echart = None
 
@@ -88,9 +89,12 @@ def set_rimay_text(text):
     global rimay_text
     rimay_text = text
 
-async def start_getting_results(sender):
+async def start_getting_results(sender): 
     await start_rimay_dsl_verification(sender)
     await start_paska_verification(sender)
+    #When everything is finished, remove logger.
+
+    current_logger = None
 
 def make_rimay_input_text():
     with ui.card():
@@ -260,19 +264,22 @@ def show_rimay_results(response):
     #rimay_dsl_result
 
 
-
-
-
-
 async def start_translation(button: ui.button):
     global current_result
+    global current_logger
     button.disable()
     ui.html("<br>")
     current_result += 1
     spinner = ui.spinner(size='lg', color='blue')
-    current_logger.start_new_translation()
+    current_logger = ResearchLogger(translation_type) #Vervalt bij nieuwe logger.
+    pre_content = f"""
+## Gherkin Input
+{input_text.strip()}
 
-    response = await run.io_bound(ask_different_prompts, input_text.strip(), translation_type)
+    """
+    current_logger.append_result(pre_content)
+
+    response = await run.io_bound(ask_different_prompts, input_text.strip(), translation_type, current_logger)
     button.enable()
     spinner.delete()
     show_llm_results(response)
@@ -288,11 +295,12 @@ async def start_rimay_dsl_verification(button: ui.button):
     spinner = ui.spinner(size='lg', color='red')
     dsl = RimayDSL()
     response = await run.io_bound(dsl.check_rimay_comf_dsl, rimay_actor_text + rimay_text)
+    dsl.write_log_output(current_logger)
+
     button.enable()
     spinner.delete()
     rimay_dsl_result(response)
     ui.html("<br>")
-    current_logger.append_result(response)
 
 
 async def start_paska_verification(button: ui.button):
@@ -303,11 +311,12 @@ async def start_paska_verification(button: ui.button):
     spinner = ui.spinner(size='lg', color='blue')
 
     response = await run.io_bound(paska_tool.check_rimay_requirement, rimay_text.strip().replace("\n",""))
+    paska_tool.write_log_output(current_logger)
+
     button.enable()
     spinner.delete()
     show_rimay_results(response)
     ui.html("<br>")
-    current_logger.append_result(response)
 
 
 def setup_ui():

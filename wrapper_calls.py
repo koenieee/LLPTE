@@ -1,7 +1,9 @@
 from llm_communicate import LLM_Communicator
 from prompt_techniques import LLM_chain_of_thought, LLM_few_shot_learning, LLM_prompt_data, LLM_role_play
+from logger import ResearchLogger 
 
-def ask_different_prompts(input_text: str, prompt_tech: str) -> str:
+
+def ask_different_prompts(input_text: str, prompt_tech: str, log:ResearchLogger) -> str:
     prompt_data = LLM_prompt_data(input_text)
     llm_communicator = LLM_Communicator()
     fsl_prompt = LLM_few_shot_learning(prompt_data)
@@ -15,4 +17,6 @@ def ask_different_prompts(input_text: str, prompt_tech: str) -> str:
     else: #Role play
         result = llm_communicator.ask_llm_to_convert(rp_prompt)
 
+    llm_communicator.write_log_output(log)
+    
     return result
