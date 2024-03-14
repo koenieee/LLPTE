@@ -5,6 +5,7 @@ import os
 import uuid
 
 from logger import ResearchLogger 
+import re
 
 
 class Paska_tool():
@@ -84,12 +85,18 @@ class Paska_tool():
 
     def write_log_output(self, log: ResearchLogger):
         if log != None:
+            self.final_result = self.final_result.replace(", ","\n")
             log_contents = f"""
 ## Rimay Paska Verification
-
+```
 {self.final_result}
+```
+### Score
+Score: {self.build_score()}
+Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score()})
 
             """
+
 
             log.append_result(log_contents)
 
@@ -97,6 +104,12 @@ class Paska_tool():
         else:
             print("RimayDSL Error: no logger found")
 
+    def build_score(self):
+        numbers = re.findall("\d+",  self.final_result)
+        numberOfSmells = sum([int(i) for i in numbers])
+
+        return 100 - numberOfSmells
+        
 
 
 class RimayDSL():
@@ -131,11 +144,17 @@ class RimayDSL():
         
 
     def build_score(self):
-        # EOF errors are bad.
-        # Missing actors can be bad.
-        # MIssing symbols or icons is really bad.
-        # Words that are unknown are also bad.
-        pass
+        if self.result[1].strip() == "":
+            return 100 #Error field had nothing. TODO, check for real value. 
+        special_errors = {"EOF": 30, "missing": 3} #EOF errors are really bad.
+        badErrorScore = 0
+        for error in special_errors:
+            if error in self.result[1]:
+                badErrorScore += special_errors[error]
+        totalNumOfErrors = len(self.result[1].split("\n")) # Count number of errors.
+
+        return max(1, 100 - totalNumOfErrors - badErrorScore) #When score is really bad, just return 1
+
                 
     def write_log_output(self, log: ResearchLogger):
         if log != None:
@@ -146,6 +165,10 @@ class RimayDSL():
 ```
 {self.result[1]}
 ```
+### Score
+Score: {self.build_score()}
+Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score()})
+
             """
 
             log.append_result(log_contents)
