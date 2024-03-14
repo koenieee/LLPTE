@@ -26,7 +26,9 @@ class LLM_Communicator():
 {str(self.question)}
 
 ## Rimay Output
-{self.answer} 
+```
+{self.answer}
+``` 
             """
 
             log.append_result(log_contents)
