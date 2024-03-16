@@ -1,0 +1,52 @@
+https://cobusgreyling.medium.com/eight-prompt-engineering-implementations-fc361fdc87b
+
+When the Order_Issuer (hereafter known as OI) creates an Order of type Subscription_Order, then OI must set the settlement_method of the Order to “FOP”.
+
+
+When Transfer_System receives a File then Transfer_System must forward the File to System
+
+
+When the ... creates an .... of type ... then .. must set the ... of the ... to "STATUS"
+
+
+
+When the <actor> creates an <object> of type <objet_type> then the <actor> must set the <property_name> of the <object> to <property_value>
+
+when the <actor> <action> then the <actor> must set the <property_name> to <property_value>
+
+
+WHEN_STRUCTURE ACTOR ModalVerb SYSTEM_RESPONSE
+
+
+must/shall <SYSTEM_RESPONSE>
+
+<action>
+
+
+
+enum ArticleInLowercase: 
+ a|an|the
+;
+
+enum ModalVerb:
+ shall|must
+;
+
+
+SYSTEM_RESPONSE = action_phrase
+
+
+
+ActionPhrase :
+ REMOVE_10_1 | OBTAIN_13_5_2 | ADMIT_65 | BEG_58_2 | BEGIN_55_1 |
+ SAY_37_7 | CONCEALMENT_16 | ALLOW_64_1 | CONTRIBUTE_13_2 | DS_VALIDATE |
+ ENGENDER_27 | EXCHANGE_13_6 | FORBID_67 |  
+  ENFORCE_63 | HERD_47_5_2  | NEGLECT_75 |LIMIT_76 | 
+  SHAKE_22_3_2_1 | THROW_17_1  
+ | OTHER_COS_45_4 |TRANSCRIBE_25_4 | MIX_22_1_2_1  |TURN_26_6_1 | USE_105 | SEND_11_1_1 
+ | SEE_30_1_1 | REFLEXIVE_APPEARANCE_48_1_2 | PUT_9_1 | DS_Migrate
+ | CREATE_26_4 | DS_Interrupt | DS_UPDATE |	DS_SelectUnselect | DS_UPLOAD | Find | KEEP_15_2  
+ | INVOLVE_107 | MIX_22_1_2 |  DS_Synchronize
+ | Split  | ApplyFor | DS_GetFrom   | STOP_55_4 | SEARCH_35_2
+ | ESTABLISH_55_5_1 | ADVISE_37_9_1 |DS_ENABLE_DISABLE |DS_SUBSCRIBE |  DS_CANCEL |DS_CALCULATE//check
+;

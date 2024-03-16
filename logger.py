@@ -8,7 +8,7 @@ class ResearchLogger():
         self.log_directory = "prompt_logging/"
         self.timestamp = datetime.now().strftime("%m_%d_%Y__%H:%M:%S")
         self.prefix = prefix_name
-        self.log_file = f"{self.log_directory}/{self.prefix}_{self.timestamp}.md"
+        self.log_file = f"{self.log_directory}/{self.prefix}/{self.prefix}_{self.timestamp}.md"
         self.file_contents = ""
         self.write_header()
 

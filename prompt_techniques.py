@@ -30,10 +30,13 @@ class LLM_prompt_technique:
 {self.question}
 
 ### Input Data
-Use the following Gherkin acceptance criteria input data: \n{self.input_obj}
+Use the following Gherkin acceptance criteria input: 
+```
+{self.input_obj}
+```
 
 ### Question:
-Can you translate the inputdata above into the specified language Rimay CNL?
+Can you translate the input above into the specified language Rimay CNL?
 
 ### Output indicator
 Output only your translated Rimay CNL text and nothing else!

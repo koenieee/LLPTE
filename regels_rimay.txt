@@ -8,6 +8,9 @@ $AvailableFor = "is, are"
 $ModalVerb = "shall, must"
 $ArticleInLowercase = "a, an, the"
 $ResponseBlockItemized = "do, the, following, actions"
+
+
+<ACTIONS::>
 $Rule_ADMIT = "exclude,excludes"
 $Rule_ADVISE = "instruct,instructs"
 $Rule_ALLOW = "allow,allows,authorize,authorizes"
