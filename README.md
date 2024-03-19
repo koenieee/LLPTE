@@ -63,6 +63,11 @@ sudo apt-get update
 sudo apt-get install bellsoft-java8-runtime-full
 ```
 
-
-
+Also download the following distsim tagger file: 
+```
+https://github.com/amiangshu/SentiSE/blob/master/edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger
+```
+And see the following file for needed modifications to paths: `/LLPTE/rimay_verification.py`
 Also, there is no error when the directory of preproccesing tooling is not found, be aware. And use full paths for everything.
+
+I precompiled the jar files for Paska and DSL Rimay.

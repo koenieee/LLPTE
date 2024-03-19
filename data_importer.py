@@ -63,7 +63,7 @@ class GherkinData(ProcessTextFile, LLM_prompt_data):
         self.gherkin_list = self.load()
 
     def load(self):
-        return super()._load_xml_file("input_dataset.xml")
+        return super()._load_xml_file("input_dataset/input_dataset.xml")
     
     #save not implemented
 
