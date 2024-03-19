@@ -2,7 +2,7 @@
 <acceptance_criterium>
     <acceptance_criteria>
         <scenario_name>Scenario 1: Requesting the cash from a creditworthy account</scenario_name>
-        <content>
+        <original>
             Given: that the account is creditworthy
             And: the card is valid
             And: the dispenser contains cash
@@ -10,24 +10,277 @@
             Then: ensure the account is debited
             And: ensure cash is dispensed
             And: ensure the card is returned
-        </content>
+        </original>
+        <simplified>
+            Given: that the account is creditworthy
+            When: the customer requests the cash
+            Then: ensure the account is debited
+        </simplified>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 2: Money withdraw from bank account</scenario_name>
-        <content>
-            Given: my bank account is in credit, and I made no withdrawals recently
+        <original>
+            Given: my bank account is in credit, 
+            And: I made no withdrawals recently
             When: I attempt to withdraw an amount less than my card's limit
             Then: the withdrawal should be complete without errors or warnings
-        </content>
+        </original>
+        <simplified>
+            Given: my bank account is in credit
+            When: I attempt to withdraw an amount less than my card's limit
+            Then: the withdrawal should be complete without errors or warnings
+        </simplified>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 3: Requesting the cash from an overdrawn account</scenario_name>
-        <content>
+        <original>
             Given: that the account is overdrawn
             And: the card is valid
             When: the customer requests the cash
             Then: ensure the rejection message is displayed
             And: ensure cash isn't dispensed
-        </content>
+        </original>
+        <simplified>
+            Given: that the account is overdrawn
+            When: the customer requests the cash
+            Then: ensure the rejection message is displayed
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 4: User presses button.</scenario_name>
+        <original>
+            Given: UserA navigates to the login page
+            When: UserA clicks on button
+            Then: SystemA refreshes page 
+        </original>
+        <simplified>
+            Given: UserA navigates to the login page
+            When: UserA clicks on button
+            Then: SystemA refreshes page 
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 5: Getting verified after clicking the link in the verification message</scenario_name>
+        <original>
+            Given: a verification email has already been sent to "valkyrie@cain.com"
+            When: I try to verify my account using the link from this email
+            Then: I should be notified that the verification was successful
+            And: I should be able to log in as "valkyrie@cain.com" with "sylius" password
+            And: my account should be verified
+        </original>
+        <simplified>
+            Given: a verification email has already been sent to "valkyrie@cain.com"
+            When: I try to verify my account using the link from this email
+            Then: I should be notified that the verification was successful
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 6: The selected province stays after validation error</scenario_name>
+        <original>
+            Given: I am editing the address of "Fletcher Ren"
+            When: I remove the street
+            And: I save my simplified address
+            Then: I should still be on the "Fletcher Ren" address edit page
+            And: I should still have "Victoria" as my chosen province
+        </original>
+        <simplified>
+            Given: I am editing the address of "Fletcher Ren"
+            When: I remove the street
+            Then: I should still be on the "Fletcher Ren" address edit page
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 7: Getting verified after clicking the link in the verification message</scenario_name>
+        <original>
+            Given: a verification email has already been sent to "valkyrie@cain.com"
+            When: I try to verify my account using the link from this email
+            Then: I should be notified that the verification was successful
+            And: I should be able to log in as "valkyrie@cain.com" with "sylius" password
+            And: my account should be verified
+        </original>
+        <simplified>
+            Given: a verification email has already been sent to "valkyrie@cain.com"
+            When: I try to verify my account using the link from this email
+            Then: I should be notified that the verification was successful
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 8: Disabling country</scenario_name>
+        <original>
+            Given: the store has country "United States"
+            When: I want to edit this country
+            And: I disable it
+            And: I save my changes
+            Then: I should be notified that it has been successfully edited
+            And: this country should be disabled
+        </original>
+        <simplified>
+            Given: the store has country "United States"
+            When: I want to edit this country
+            Then: I should be notified that it has been successfully edited
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 9: Resending the verification email as a logged in user</scenario_name>
+        <original>
+            Given: I am logged in as "valkyrie@cain.com"
+            When: I resend the verification email
+            Then: I should be notified that the verification email has been sent
+            And: it should be sent to "valkyrie@cain.com"
+        </original>
+        <simplified>
+            Given: I am logged in as "valkyrie@cain.com"
+            When: I resend the verification email
+            Then: I should be notified that the verification email has been sent
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 10: Logging out the user doesn't log out my admin account</scenario_name>
+        <original>
+            Given: I am impersonating the customer "remnant@london.uk"
+            When: I log out from the store
+            Then: I should still be able to access the administration dashboard
+        </original>
+        <simplified>
+            Given: I am impersonating the customer "remnant@london.uk"
+            When: I log out from the store
+            Then: I should still be able to access the administration dashboard
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 11: Seeing disabled code field while editing country</scenario_name>
+        <original>
+            Given: the store has country "United States"
+            When: I want to edit this country
+            Then: the code field should be disabled
+        </original>
+        <simplified>
+            Given: the store has country "United States"
+            When: I want to edit this country
+            Then: the code field should be disabled
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 12: Changing the currency of my cart</scenario_name>
+        <original>
+            Given: I have product "The Pug Mug" in the cart
+            When: I switch to the "EUR" currency
+            Then: the grAnd: total value should be "€6.82"
+            And: the grAnd: total value in base currency should be "$7.00"
+        </original>
+        <simplified>
+            Given: I have product "The Pug Mug" in the cart
+            When: I switch to the "EUR" currency
+            Then: the grAnd: total value should be "€6.82"
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 13: Viewing information about empty cart after channel switching</scenario_name>
+        <original>
+            Given: I simplified my current channel to "Poland"
+            And: I added product "Onion" to the cart
+            When: I change my current channel to "France"
+            And: I see the summary of my cart
+            Then: my cart should be empty
+        </original>
+        <simplified>
+            Given: I simplified my current channel to "Poland"
+            When: I change my current channel to "France"
+            Then: my cart should be empty
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 14: Displaying default shop homepage</scenario_name>
+        <original>
+            Given: channel "United States" does not use any theme
+            When: I visit this channel's homepage
+            Then: I should not see a homepage from "maverick/meerkat" theme
+        </original>
+        <simplified>
+            Given: channel "United States" does not use any theme
+            When: I visit this channel's homepage
+            Then: I should not see a homepage from "maverick/meerkat" theme
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 15: Displaying themed shop homepage</scenario_name>
+        <original>
+            Given: channel "United States" uses "maverick/meerkat" theme
+            When: I visit this channel's homepage
+            Then: I should see a homepage from that theme
+        </original>
+        <simplified>
+            Given: channel "United States" uses "maverick/meerkat" theme
+            When: I visit this channel's homepage
+            Then: I should see a homepage from that theme
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 16: Choosing shipping address from address book</scenario_name>
+        <original>
+            Given: I have product "PHP T-Shirt" in the cart
+            And: I am at the checkout addressing step
+            When: I choose "Seaside Fwy" street for shipping address
+            Then: address "Lucifer Morningstar", "Seaside Fwy", "90802", "Los Angeles", "United States", "Arkansas" should be filled as shipping address
+        </original>
+        <simplified>
+            Given: I have product "PHP T-Shirt" in the cart
+            When: I choose "Seaside Fwy" street for shipping address
+            Then: address "Lucifer Morningstar", "Seaside Fwy", "90802", "Los Angeles", "United States", "Arkansas" should be filled as shipping address
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 17: Seeing the unpaid order in the list</scenario_name>
+        <original>
+            Given: I am logged in as "john@example.com"
+            When: I view my order history
+            Then: I should see one order with total of $29.99 And: pending payment
+        </original>
+        <simplified>
+            Given: I am logged in as "john@example.com"
+            When: I view my order history
+            Then: I should see one order with total of $29.99 And: pending payment
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 18: Being unable to change currencies</scenario_name>
+        <original>
+            Given: the exchange rate of "US Dollar" to "British Pound" is 1.30
+            When: I want to edit this exchange rate
+            Then: I should see that the source currency is disabled
+            And: I should see that the target currency is disabled
+        </original>
+        <simplified>
+            Given: the exchange rate of "US Dollar" to "British Pound" is 1.30
+            When: I want to edit this exchange rate
+            Then: I should see that the source currency is disabled
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 19: Inability to impersonate a customer with no account</scenario_name>
+        <original>
+            Given: the store has customer "harold@thrasher.ie" with first name "Harold"
+            When: I view their details
+            Then: I should be unable to impersonate them
+        </original>
+        <simplified>
+            Given: the store has customer "harold@thrasher.ie" with first name "Harold"
+            When: I view their details
+            Then: I should be unable to impersonate them 
+        </simplified>
+    </acceptance_criteria>
+    <acceptance_criteria>
+        <scenario_name>Scenario 20: Not being able to add a product to the cart when it is out of stock</scenario_name>
+        <original>
+            Given: the product "T-shirt banana" is out of stock
+            When: I check this product's details
+            Then: I should see that it is out of stock
+            And: I should be unable to add it to the cart
+        </original>
+        <simplified>
+            Given: the product "T-shirt banana" is out of stock
+            When: I check this product's details
+            Then: I should see that it is out of stock
+        </simplified>
     </acceptance_criteria>
 </acceptance_criterium>

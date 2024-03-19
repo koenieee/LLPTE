@@ -1,3 +1,4 @@
+import re
 from prompt_techniques import LLM_prompt_data
 import csv
 import xml.etree.ElementTree as ET
@@ -37,8 +38,8 @@ class ProcessTextFile():
         parsed_dict = dict()
         for child in root.iter():
             if child.text.strip():
-                parsed_dict[child.tag] = child.text
-            if len(parsed_dict) > 1:
+                parsed_dict[child.tag] = re.sub(' +', ' ', child.text.strip()).replace('\n ','\n')
+            if len(parsed_dict) > 2:
                 all_dicts.append(parsed_dict)
                 parsed_dict = dict()
 
@@ -59,11 +60,32 @@ class ProcessTextFile():
 class GherkinData(ProcessTextFile, LLM_prompt_data):
     def __init__(self) -> None:
         super().__init__()
+        self.gherkin_list = self.load()
 
     def load(self):
         return super()._load_xml_file("input_dataset.xml")
     
     #save not implemented
+
+    def get_all_acceptance_criteria(self):
+        return self.gherkin_list
+
+    def __str__(self):
+        make_str = ""
+        for scenario in self.gherkin_list:
+            scenario_name = scenario["scenario_name"]
+            content_acceptance_criteria = scenario["simplified"]
+
+            make_str += "========================\n"
+            make_str += scenario_name+"\n"
+            make_str += "////////////////////////\n"
+            make_str += content_acceptance_criteria+"\n"
+            make_str += "========================\n"
+        return make_str
+
+    def __repr__(self) -> str:
+
+        return self.__str__()
 
 
 

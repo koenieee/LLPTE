@@ -90,9 +90,11 @@ def set_rimay_text(text):
     rimay_text = text
 
 async def start_getting_results(sender): 
+    global current_logger
     await start_rimay_dsl_verification(sender)
     await start_paska_verification(sender)
     #When everything is finished, remove logger.
+    current_logger.generate_final_score()
 
     current_logger = None
 
@@ -274,8 +276,9 @@ async def start_translation(button: ui.button):
     current_logger = ResearchLogger(translation_type) #Vervalt bij nieuwe logger.
     pre_content = f"""
 ## Gherkin Input
+```
 {input_text.strip()}
-
+```
     """
     current_logger.append_result(pre_content)
 

@@ -33,7 +33,21 @@ python3 main.py
 ```
 
 Make sure to open port 8080 on webserver to access nicegui
+For standalone modes add the parameter: standalone
 
+Results will be logged in prompt_logging folder, sorted by LLM-prompting techniqnue.
+Filename contains score from DSL Rimay and Paska.
+
+```bash
+
+python3 main.py standalone 0 20
+
+```
+
+Means run script standalone and use acceptance criteria 0 - 20.
+
+Input dataset for Gherkin is inspired by https://zenodo.org/records/6460854
+See input_dataset.xml
 
 # Notes to run paska tooling
 use full Java 8 JDK with JFX runtime. Do not use the small version of java on Linux Ubuntu.
