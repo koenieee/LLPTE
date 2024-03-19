@@ -6,7 +6,7 @@ import uuid
 class ResearchLogger():
     
     def __init__(self, prefix_name) -> None:
-        self.log_directory = "prompt_logging/"
+        self.log_directory = "output_dataset/"
         self.timestamp = datetime.now().strftime("%m_%d_%Y__%H:%M:%S")
         self.prefix = prefix_name
         self.log_file = f"{self.log_directory}/{self.prefix}/{self.prefix}_{self.timestamp}.md"
