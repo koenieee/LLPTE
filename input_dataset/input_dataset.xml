@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Versimpelen van de acceptatiecriteria:
+- Verwijderen de AND constructie
+- I vertalen naar UserA
+- Zinnen correct schrijven naar derdepersoonsvorm
+
+Manual translation:
+
+While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POSTCONDITION>
+
+-->
 <acceptance_criterium>
     <acceptance_criteria>
         <scenario_name>Scenario 1: Requesting the cash from a creditworthy account</scenario_name>
@@ -13,9 +24,14 @@
         </original>
         <simplified>
             Given: that the account is creditworthy
-            When: the customer requests the cash
+            When: UserA requests the cash
             Then: ensure the account is debited
         </simplified>
+        <manual_translation>
+            While the "bank account" contains "credits" 
+            when UserA retrieves "the cash", 
+            then SystemA must reduce the "account balance".   
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 2: Money withdraw from bank account</scenario_name>
@@ -26,10 +42,12 @@
             Then: the withdrawal should be complete without errors or warnings
         </original>
         <simplified>
-            Given: my bank account is in credit
-            When: I attempt to withdraw an amount less than my card's limit
+            Given: UserA bank account is in credit
+            When: UserA attempts to withdraw an amount less than UserA card's limit
             Then: the withdrawal should be complete without errors or warnings
         </simplified>
+        <manual_translation>
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 3: Requesting the cash from an overdrawn account</scenario_name>
@@ -42,9 +60,11 @@
         </original>
         <simplified>
             Given: that the account is overdrawn
-            When: the customer requests the cash
+            When: UserA requests the cash
             Then: ensure the rejection message is displayed
         </simplified>
+        <manual_translation>
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 4: User presses button.</scenario_name>
@@ -58,6 +78,8 @@
             When: UserA clicks on button
             Then: SystemA refreshes page 
         </simplified>
+        <manual_translation>
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 5: Getting verified after clicking the link in the verification message</scenario_name>
@@ -69,10 +91,15 @@
             And: my account should be verified
         </original>
         <simplified>
-            Given: a verification email has already been sent to "valkyrie@cain.com"
-            When: I try to verify my account using the link from this email
-            Then: I should be notified that the verification was successful
+            Given: a verification email has already been sent to "UserA"
+            When: UserA tries to verify his account using the link from this email
+            Then: UserA should be notified that the verification was successful
         </simplified>
+        <manual_translation>
+            While the "verification email" contains a "verification link" 
+            When UserA validates "email address" following the "verification link", 
+            then SystemA must notify "with verification successful" to UserA.  
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 6: The selected province stays after validation error</scenario_name>
@@ -84,25 +111,23 @@
             And: I should still have "Victoria" as my chosen province
         </original>
         <simplified>
-            Given: I am editing the address of "Fletcher Ren"
-            When: I remove the street
-            Then: I should still be on the "Fletcher Ren" address edit page
+            Given: UserA is editing the address of "Fletcher Ren"
+            When: UserA removes the street
+            Then: UserA should still be on the "Fletcher Ren" address edit page
         </simplified>
+        <manual_translation>
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 7: Getting verified after clicking the link in the verification message</scenario_name>
+        <scenario_name>Scenario 7: TODO</scenario_name>
         <original>
-            Given: a verification email has already been sent to "valkyrie@cain.com"
-            When: I try to verify my account using the link from this email
-            Then: I should be notified that the verification was successful
-            And: I should be able to log in as "valkyrie@cain.com" with "sylius" password
-            And: my account should be verified
+            TODO
         </original>
         <simplified>
-            Given: a verification email has already been sent to "valkyrie@cain.com"
-            When: I try to verify my account using the link from this email
-            Then: I should be notified that the verification was successful
+            TODO
         </simplified>
+        <manual_translation>
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 8: Disabling country</scenario_name>
@@ -115,10 +140,15 @@
             And: this country should be disabled
         </original>
         <simplified>
-            Given: the store has country "United States"
-            When: I want to edit this country
-            Then: I should be notified that it has been successfully edited
+            Given: SystemA has country "United States"
+            When: UserA wants to edit this country
+            Then: UserA should be notified that it has been successfully edited
         </simplified>
+        <manual_translation>
+            While SystemA has "country United States" 
+            when UserA changes "this country", 
+            then SystemA must notify "successfully edited" to UserA.
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 9: Resending the verification email as a logged in user</scenario_name>
@@ -129,10 +159,15 @@
             And: it should be sent to "valkyrie@cain.com"
         </original>
         <simplified>
-            Given: I am logged in as "valkyrie@cain.com"
-            When: I resend the verification email
-            Then: I should be notified that the verification email has been sent
+            Given: UserA is logged in as "valkyrie@cain.com"
+            When: UserA resends the verification email
+            Then: UserA should be notified that the verification email has been sent
         </simplified>
+        <manual_translation>
+            While UserA is "logged in as valkyrie@cain.com" 
+            when UserA selects "new verification email", 
+	        then SystemA must notify "verification email has been send" to UserA.
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 10: Logging out the user doesn't log out my admin account</scenario_name>
@@ -142,10 +177,13 @@
             Then: I should still be able to access the administration dashboard
         </original>
         <simplified>
-            Given: I am impersonating the customer "remnant@london.uk"
-            When: I log out from the store
-            Then: I should still be able to access the administration dashboard
+            Given: UserA impersonates the customer "remnant@london.uk"
+            When: UserA logs out from SystemA
+            Then: UserA should still be able to access the administration dashboard
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 11: Seeing disabled code field while editing country</scenario_name>
@@ -155,10 +193,13 @@
             Then: the code field should be disabled
         </original>
         <simplified>
-            Given: the store has country "United States"
-            When: I want to edit this country
+            Given: SystemA has country "United States"
+            When: UserA wants to edit this country
             Then: the code field should be disabled
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 12: Changing the currency of my cart</scenario_name>
@@ -169,10 +210,13 @@
             And: the grAnd: total value in base currency should be "$7.00"
         </original>
         <simplified>
-            Given: I have product "The Pug Mug" in the cart
-            When: I switch to the "EUR" currency
-            Then: the grAnd: total value should be "€6.82"
+            Given: UserA has product "The Pug Mug" in the cart
+            When: UserA switches to the "EUR" currency
+            Then: the grand total value should be "€6.82"
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 13: Viewing information about empty cart after channel switching</scenario_name>
@@ -184,10 +228,13 @@
             Then: my cart should be empty
         </original>
         <simplified>
-            Given: I simplified my current channel to "Poland"
-            When: I change my current channel to "France"
-            Then: my cart should be empty
+            Given: UserA simplifies his current channel to "Poland"
+            When: UserA changes current channel to "France"
+            Then: UserA carts should be empty
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 14: Displaying default shop homepage</scenario_name>
@@ -198,9 +245,12 @@
         </original>
         <simplified>
             Given: channel "United States" does not use any theme
-            When: I visit this channel's homepage
-            Then: I should not see a homepage from "maverick/meerkat" theme
+            When: UserA visits this channel's homepage
+            Then: UserA should not see a homepage from "maverick/meerkat" theme
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 15: Displaying themed shop homepage</scenario_name>
@@ -211,9 +261,12 @@
         </original>
         <simplified>
             Given: channel "United States" uses "maverick/meerkat" theme
-            When: I visit this channel's homepage
-            Then: I should see a homepage from that theme
+            When: UserA visit this channel's homepage
+            Then: UserA should see a homepage from that theme
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 16: Choosing shipping address from address book</scenario_name>
@@ -224,10 +277,13 @@
             Then: address "Lucifer Morningstar", "Seaside Fwy", "90802", "Los Angeles", "United States", "Arkansas" should be filled as shipping address
         </original>
         <simplified>
-            Given: I have product "PHP T-Shirt" in the cart
-            When: I choose "Seaside Fwy" street for shipping address
-            Then: address "Lucifer Morningstar", "Seaside Fwy", "90802", "Los Angeles", "United States", "Arkansas" should be filled as shipping address
+            Given: UserA has product "PHP T-Shirt" in the cart
+            When: UserA chooses "Seaside Fwy" street for shipping address
+            Then: address "Lucifer Morningstar, Seaside Fwy, 90802, Los Angeles, United States, Arkansas" should be filled as shipping address
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 17: Seeing the unpaid order in the list</scenario_name>
@@ -237,10 +293,13 @@
             Then: I should see one order with total of $29.99 And: pending payment
         </original>
         <simplified>
-            Given: I am logged in as "john@example.com"
-            When: I view my order history
-            Then: I should see one order with total of $29.99 And: pending payment
+            Given: UserA logged in as "john@example.com"
+            When: UserA views order history
+            Then: UserA should sees one order with total of $29.99
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 18: Being unable to change currencies</scenario_name>
@@ -252,9 +311,12 @@
         </original>
         <simplified>
             Given: the exchange rate of "US Dollar" to "British Pound" is 1.30
-            When: I want to edit this exchange rate
-            Then: I should see that the source currency is disabled
+            When: UserA wants to edit this exchange rate
+            Then: UserA should see that the source currency is disabled
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 19: Inability to impersonate a customer with no account</scenario_name>
@@ -264,10 +326,13 @@
             Then: I should be unable to impersonate them
         </original>
         <simplified>
-            Given: the store has customer "harold@thrasher.ie" with first name "Harold"
-            When: I view their details
-            Then: I should be unable to impersonate them 
+            Given: SystemA has customer "harold@thrasher.ie" with first name "Harold"
+            When: UserA views their details
+            Then: UserA should be unable to impersonate them 
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
         <scenario_name>Scenario 20: Not being able to add a product to the cart when it is out of stock</scenario_name>
@@ -279,8 +344,11 @@
         </original>
         <simplified>
             Given: the product "T-shirt banana" is out of stock
-            When: I check this product's details
-            Then: I should see that it is out of stock
+            When: UserA checks this product's details
+            Then: UserA should see that it is out of stock
         </simplified>
+        <manual_translation>
+            TODO
+        </manual_translation>
     </acceptance_criteria>
 </acceptance_criterium>

@@ -33,12 +33,14 @@ all_acceptance_criteria = gherkin_acceptance_criteria.get_all_acceptance_criteri
 
 
 gui = str(sys.argv[1])
-range_start = int(sys.argv[2]) or 0
-range_end = int(sys.argv[3]) or 20
 
-print(gherkin_acceptance_criteria)
 
 if gui == "standalone":
+    range_start = int(sys.argv[2]) or 0
+    range_end = int(sys.argv[3]) or 20
+
+    print(gherkin_acceptance_criteria)
+    print(len(all_acceptance_criteria))
 # Standalone?
     for scenario in all_acceptance_criteria[range_start:range_end]:
         scenario_name = scenario["scenario_name"]

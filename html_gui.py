@@ -94,7 +94,8 @@ async def start_getting_results(sender):
     await start_rimay_dsl_verification(sender)
     await start_paska_verification(sender)
     #When everything is finished, remove logger.
-    current_logger.generate_final_score()
+    if current_logger != None:
+        current_logger.generate_final_score()
 
     current_logger = None
 

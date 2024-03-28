@@ -48,7 +48,7 @@ Final_score = {this_score}
 
         # Absolute path of a file
         old_name =  self.log_file 
-        new_name = f"{self.log_directory}/{self.prefix}/{self.prefix}_{this_score}_score_{self.timestamp}.md"
+        new_name = f"{self.log_directory}/{self.prefix}/{self.prefix}_{self.timestamp}_{this_score}_score.md"
 
         # Renaming the file
         os.rename(old_name, new_name)

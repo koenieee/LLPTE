@@ -39,7 +39,7 @@ class ProcessTextFile():
         for child in root.iter():
             if child.text.strip():
                 parsed_dict[child.tag] = re.sub(' +', ' ', child.text.strip()).replace('\n ','\n')
-            if len(parsed_dict) > 2:
+            if len(parsed_dict) > 3:
                 all_dicts.append(parsed_dict)
                 parsed_dict = dict()
 
@@ -75,6 +75,8 @@ class GherkinData(ProcessTextFile, LLM_prompt_data):
         for scenario in self.gherkin_list:
             scenario_name = scenario["scenario_name"]
             content_acceptance_criteria = scenario["simplified"]
+            manual = scenario["manual_translation"]
+
 
             make_str += "========================\n"
             make_str += scenario_name+"\n"

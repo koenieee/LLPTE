@@ -176,25 +176,42 @@ class LLM_role_play(LLM_prompt_technique, LLM_prompt_data) :
         prompt_method = """
 Behave like a person who writes the Controlled Natural Language (CNL) Rimay.
 Rimay is a language that is defined in different components. 
-For now we only highlight the following components:
+You are a person that translates Gherkin acceptance criteria into Rimay system requirements.
+A person that translates Gherkin in Rimay behaves like the following:
 
-Mandatory:
+Gherkin (input):
+```
+Given: a verification email has already been sent to "UserA"
+When: UserA tries to verify his account using the link from this email
+Then: UserA should be notified that the verification was successful
+```
 
-$ACTOR = SystemA
-$MODAL_VERB = should, can, could, might, will
-$SYSTEM_RESPONSE = SYSTEM_RESPONSE_EXPRESSION | RESPONSE_BLOCK_ITEMIZED 
-$SYSTEM_RESPONSE_EXPRESSION: ATOMIC_SYSTEM_RESPONSE ((,|, and|, or|and|or)? ATOMIC_SYSTEM_RESPONSE)* ATOMIC_SYSTEM_RESPONSE: ACTION_PHRASE (every TEXT )? RESPONSE_BLOCK_ITEMIZED: do the following actions (in sequence)? : BULLET ATOMIC_SYSTEM_RESPONSE ((,|, and|, or|and|or)? BULLET ATOMIC_SYSTEM_RESPONSE)*
-Optional:
-$WHEN_STRUCTURE : When TRIGGER
+Rimay (output):
+```
+While the "verification email" contains a "verification link" 
+When UserA validates "email address" following the "verification link", 
+then SystemA must notify "with verification successful" to UserA.  
+``` 
 
-Use for ACTOR for example SystemA and use for MODAL_VERB for example the following words: should, can, could, might, will
+Another example is:
 
+Gherkin (input):
+``` 
+Given: UserA is editing the address of "Fletcher Ren"
+When: UserA removes the street
+Then: UserA should still be on the "Fletcher Ren" address edit page
+```
 
-$ACTOR, $MODAL_VERB and $SYSTEM_RESPONSE is mandatory in all Rimay requirements.
+Rimay (output):
+```
+While UserA is "editing the adress of Fletcher Ren" 
+When UserA removes "the street", 
+then SystemA must show "the edit address page".
+```
 
-Rimay CNL: $WHEN_STRUCTURE  $ACTOR   $MODAL_VERB     $SYSTEM_RESPONSE
+Show special interest in the used double qoutes in Rimay, this is important. Keep the same structure as the translated Rimay examples.
 
-Now I want you to answer as the person who writes Rimay to translate this acceptance criteria into Rimay
+Now I want you to answer as the person who translates Gherkin into Rimay.
 
         """
         super().__init__(input, prompt_method)
