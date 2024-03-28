@@ -119,14 +119,20 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 7: TODO</scenario_name>
+        <scenario_name>Scenario 7: Not being able to add a product to the cart when it is out of stock</scenario_name>
         <original>
-            TODO
+            Given: the product "T-shirt banana" is out of stock
+            When: I check this product's details
+            Then: I should see that it is out of stock
+            And: I should be unable to add it to the cart
         </original>
         <simplified>
-            TODO
+            Given: the product "T-shirt banana" is out of stock
+            When: UserA checks this product's details
+            Then: UserA should see that it is out of stock
         </simplified>
         <manual_translation>
+            TODO
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
@@ -329,23 +335,6 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
             Given: SystemA has customer "harold@thrasher.ie" with first name "Harold"
             When: UserA views their details
             Then: UserA should be unable to impersonate them 
-        </simplified>
-        <manual_translation>
-            TODO
-        </manual_translation>
-    </acceptance_criteria>
-    <acceptance_criteria>
-        <scenario_name>Scenario 20: Not being able to add a product to the cart when it is out of stock</scenario_name>
-        <original>
-            Given: the product "T-shirt banana" is out of stock
-            When: I check this product's details
-            Then: I should see that it is out of stock
-            And: I should be unable to add it to the cart
-        </original>
-        <simplified>
-            Given: the product "T-shirt banana" is out of stock
-            When: UserA checks this product's details
-            Then: UserA should see that it is out of stock
         </simplified>
         <manual_translation>
             TODO

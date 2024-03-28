@@ -109,7 +109,7 @@ Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score
         numbers = re.findall("\d+",  self.final_result)
         numberOfSmells = sum([int(i) for i in numbers])
 
-        special_errors = {"Incomplete requirement: 1": 30, "Incomplete system response: 1": 20} #EOF errors are really bad.
+        special_errors = {"Incomplete requirement: 1": 30, "Incomplete system response: 1": 20} #Bad paska requirements are special errors.
         badErrorScore = 0
         for error in special_errors:
             if error in self.final_result:

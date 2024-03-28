@@ -79,25 +79,22 @@ subscribe, subscribes, upload, uploads
     def __init__(self, input: LLM_prompt_data):
         prompt_method = f"""
 ### Context
-The following syntax structure is called Rimay, this is a CNL (Controlled Natural Language):
+We are translating Gherkin acceptance criteria into Rimay CNL.
+For this translation use the followin information:
 
 $ACTOR is for example a thing or a person.
-$MODAL_VERB is for example the following word: must and shall.
+$MODAL_VERB is for  the following word: must or shall.
 $TRIGGER is for example a trigger action, something what a system does.
-$WHEN_STRUCTURE is the word  'When' followed by the variable defined $TRIGGER.
-$SYSTEM_RESPONSE is something that the syst
+
+$WHILE_STRUCTURE is the word 'While' followed by the Gherkin Given condition
+$WHEN_STRUCTURE is the word  'When' followed by the Gherkin When condition
+$SYSTEM_RESPONSE is a combination of the Actors and the Gherkin Then condition.
 
 $ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirements.
 Replace the variables with the right text according the input acceptance criteria.
 In the following order: 
 
-Rimay CNL definition: $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
-
-really important rule, make only use of the following word list:
-{self.allowed_word_list()}
-
-Important extra rule: if the word is not defined in the list above, put if between quotes.
-DO NOT WRITE ANY OTHER WORDS THAN THE DEFINED WORD LIST!
+Rimay CNL definition: $WHILE_STRUCTURE $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
 
 The following example is a valid Rimay CNL:
 
@@ -105,7 +102,6 @@ When SystemB receives an "email alert" from SystemA, SystemB must send an Instru
 
 With the usage of the following extra information:
 Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, actor UserC
-Classes: class Instruction := description record, class Y
 
 THIS IS NOT VALID RIMAY:
 When UserA navigates to the login page, UserA clicks on button, SystemA must refresh the page.
@@ -179,30 +175,28 @@ Rimay is a language that is defined in different components.
 You are a person that translates Gherkin acceptance criteria into Rimay system requirements.
 A person that translates Gherkin in Rimay behaves like the following:
 
-Gherkin (input):
+User ask: translate the following Gherkin into Rimay:
 ```
 Given: a verification email has already been sent to "UserA"
 When: UserA tries to verify his account using the link from this email
 Then: UserA should be notified that the verification was successful
 ```
 
-Rimay (output):
+you say:  Here is your translated Rimay output
 ```
 While the "verification email" contains a "verification link" 
 When UserA validates "email address" following the "verification link", 
 then SystemA must notify "with verification successful" to UserA.  
 ``` 
 
-Another example is:
-
-Gherkin (input):
+User ask: translate the following Gherkin into Rimay:
 ``` 
 Given: UserA is editing the address of "Fletcher Ren"
 When: UserA removes the street
 Then: UserA should still be on the "Fletcher Ren" address edit page
 ```
 
-Rimay (output):
+you say:  Here is your translated Rimay output
 ```
 While UserA is "editing the adress of Fletcher Ren" 
 When UserA removes "the street", 
@@ -210,7 +204,7 @@ then SystemA must show "the edit address page".
 ```
 
 Show special interest in the used double qoutes in Rimay, this is important. Keep the same structure as the translated Rimay examples.
-
+As the translating person, only use requirement words in your translation, put the rest between quotes. 
 Now I want you to answer as the person who translates Gherkin into Rimay.
 
         """
