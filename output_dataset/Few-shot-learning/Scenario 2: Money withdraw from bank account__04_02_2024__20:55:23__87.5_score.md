@@ -105,3 +105,33 @@ DSL_Score: 65
 Progressbar: ![65%](https://progress-bar.dev/65)
 
             
+
+
+## Rimay Paska Verification
+```
+File generated_rimay.csv.csv
+Smells found in this document: 
+Non-atomic requirement: 0
+Incomplete requirement: 0
+Incorrect order requirement: 0
+Coordination ambiguity: 0
+Not requirement: ,0
+Incomplete condition: 0
+Incomplete system response: 0
+Passive voice: 0
+Not precise verb: 0
+Number Req with smells: 0
+
+```
+### Paska Score
+PASKA_Score: 100
+
+Progressbar: ![100%](https://progress-bar.dev/100)
+
+            
+
+### Final Score
+Final_score = 87.5
+
+Progressbar: ![87.5%](https://progress-bar.dev/87.5)
+
