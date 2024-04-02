@@ -93,6 +93,7 @@ class Paska_tool():
 ```
 ### Paska Score
 PASKA_Score: {self.build_score()}
+
 Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score()})
 
             """
@@ -181,6 +182,7 @@ class RimayDSL():
 ```
 ### DSL-Rimay Score
 DSL_Score: {self.build_score()}
+
 Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score()})
 
             """

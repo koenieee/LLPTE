@@ -44,6 +44,9 @@ class ResearchLogger():
         self.file_contents = f"""
 ### Researcher score
 Researcher_score = {score}
+
+Progressbar: ![{score}%](https://progress-bar.dev/{score*100})
+
 """
 
 
