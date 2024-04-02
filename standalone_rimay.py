@@ -53,7 +53,7 @@ def researcher_score(inp, output, current_logger: ResearchLogger):
     print("[3] = Good")
     print('\a') #bell sound.
     score_choice = int(input('Score: [0..3]: \n'))
-    score_options = [0.90, 0.95, 1.10, 1.15]
+    score_options = [-10, -5, +10, +15]
     
     print("//////////////////////////////////")
     
@@ -98,6 +98,7 @@ def results(path):
     for x in lst:
         if x.endswith(".md"):
             all_data = x.split('__')
+            print(all_data)
             scenario_num = re.findall(r'\d+', all_data[0])[0]
             date = all_data[1]
             time = all_data[2]

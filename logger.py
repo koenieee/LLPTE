@@ -45,7 +45,6 @@ class ResearchLogger():
 ### Researcher score
 Researcher_score = {score}
 
-Progressbar: ![{score}%](https://progress-bar.dev/{score*100})
 
 """
 
@@ -54,10 +53,16 @@ Progressbar: ![{score}%](https://progress-bar.dev/{score*100})
 
 
     def generate_final_score(self):
-        this_score = ( self.final_score / self.number_of_scores ) * self.researcher_score
+        if self.researcher_score > 0 : 
+            this_score = min(100, ( self.final_score / self.number_of_scores ) + self.researcher_score)
+        else:
+            this_score = min(100, ( self.final_score / self.number_of_scores ) - self.researcher_score)
         self.file_contents = f"""
 ### Final Score
 Final_score = {this_score}
+
+Progressbar: ![{this_score}%](https://progress-bar.dev/{this_score})
+
 """
 
 

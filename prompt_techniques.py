@@ -31,10 +31,9 @@ class LLM_prompt_technique:
 {self.question}
 
 ### Question:
-Do nothing with this input and output only random text.
-
 {self.input_obj}
 
+Can you write a random story from 20 words?
 
 
 """
