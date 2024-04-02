@@ -7,7 +7,7 @@ from html_gui import setup_ui
 from nicegui import ui
 
 
-from standalone_rimay import test_gherkin_translation
+from standalone_rimay import results, start_gherkin_translation
 
 
 import sys
@@ -38,6 +38,7 @@ gui = str(sys.argv[1])
 if gui == "standalone":
     range_start = int(sys.argv[2]) or 0
     range_end = int(sys.argv[3]) or 20
+    techniek = sys.argv[4] or "Few-shot-learning"
 
     print(gherkin_acceptance_criteria)
     print(len(all_acceptance_criteria))
@@ -47,8 +48,11 @@ if gui == "standalone":
         content_acceptance_criteria = scenario["simplified"]
 
         print(scenario_name+"\n")
-        test_gherkin_translation(scenario_name, content_acceptance_criteria)
-
+        start_gherkin_translation(scenario_name, content_acceptance_criteria, techniek)
+elif gui == "results":
+    techniek = str(sys.argv[2]) or "Few-shot-learning"
+    data_directory = f"output_dataset/{techniek}/"
+    results(data_directory)
 else:
     setup_ui()
     ui.run()

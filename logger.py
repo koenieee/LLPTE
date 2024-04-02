@@ -5,15 +5,17 @@ import uuid
 
 class ResearchLogger():
     
-    def __init__(self, prefix_name) -> None:
+    def __init__(self, prefix_name, scenario_name: str = "") -> None:
         self.log_directory = "output_dataset/"
         self.timestamp = datetime.now().strftime("%m_%d_%Y__%H:%M:%S")
         self.prefix = prefix_name
-        self.log_file = f"{self.log_directory}/{self.prefix}/{self.prefix}_{self.timestamp}.md"
+        self.scenario = scenario_name
+        self.log_file = f"{self.log_directory}/{self.prefix}/{self.scenario}__{self.timestamp}.md"
         self.file_contents = ""
         self.write_header()
         self.final_score = 0
         self.number_of_scores = 0
+        self.researcher_score = 1
 
     def write_header(self):
         self.file_contents += f"""
@@ -22,6 +24,7 @@ class ResearchLogger():
 * Prefix:   {self.prefix}
 * Datetime: {self.timestamp}
 * UniqueID: {uuid.uuid4()}
+* Scenario name: {self.scenario}
 
         """
         self.write_to_file()
@@ -36,8 +39,19 @@ class ResearchLogger():
         self.final_score += score
         self.number_of_scores += 1
 
+    def custom_researcher_score(self, score):
+        self.researcher_score = score
+        self.file_contents = f"""
+### Researcher score
+Researcher_score = {score}
+"""
+
+
+        self.write_to_file()
+
+
     def generate_final_score(self):
-        this_score = self.final_score / self.number_of_scores
+        this_score = ( self.final_score / self.number_of_scores ) * self.researcher_score
         self.file_contents = f"""
 ### Final Score
 Final_score = {this_score}
@@ -48,7 +62,7 @@ Final_score = {this_score}
 
         # Absolute path of a file
         old_name =  self.log_file 
-        new_name = f"{self.log_directory}/{self.prefix}/{self.prefix}_{self.timestamp}_{this_score}_score.md"
+        new_name = f"{self.log_directory}/{self.prefix}/{self.scenario}__{self.timestamp}__{this_score}_score.md"
 
         # Renaming the file
         os.rename(old_name, new_name)

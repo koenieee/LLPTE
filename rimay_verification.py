@@ -91,8 +91,8 @@ class Paska_tool():
 ```
 {self.final_result}
 ```
-### Score
-Score: {self.build_score()}
+### Paska Score
+PASKA_Score: {self.build_score()}
 Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score()})
 
             """
@@ -106,16 +106,24 @@ Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score
             print("RimayDSL Error: no logger found")
 
     def build_score(self):
-        numbers = re.findall("\d+",  self.final_result)
-        numberOfSmells = sum([int(i) for i in numbers])
-
-        special_errors = {"Incomplete requirement: 1": 30, "Incomplete system response: 1": 20} #Bad paska requirements are special errors.
+        special_errors = {
+                        "Non-atomic requirement: 1": 5,
+                        "Incomplete requirement: 1": 25,
+                        "Incorrect order requirement: 1": 5,
+                        "Coordination ambiguity: 1": 10,
+                        "Not requirement: ,1": 20,
+                        "Incomplete condition: 1": 10,
+                        "Incomplete system response: 1": 15,
+                        "Passive voice: 1": 5,
+                        "Not precise verb: 1": 5
+                         }
+        
         badErrorScore = 0
         for error in special_errors:
             if error in self.final_result:
                 badErrorScore += special_errors[error]
 
-        return 100 - (numberOfSmells * 2) - badErrorScore
+        return 100 - badErrorScore
         
 
 
@@ -153,26 +161,26 @@ class RimayDSL():
     def build_score(self):
         if self.result[1].strip() == "":
             return 100 #Error field had nothing. TODO, check for real value. 
-        special_errors = {"EOF": 30, "missing": 5, "RULE_STRING ": 7} #EOF errors are really bad.
+        special_errors = {"EOF": 10, "missing": 5, "RULE_STRING ": 7} #EOF errors are really bad.
         badErrorScore = 0
         for error in special_errors:
             if error in self.result[1]:
                 badErrorScore += special_errors[error]
         totalNumOfErrors = len(self.result[1].split("\n")) # Count number of errors.
 
-        return max(1, 100 - totalNumOfErrors - badErrorScore) #When score is really bad, just return 1
+        return max(1, 100 - (totalNumOfErrors)- badErrorScore) #When score is really bad, just return 1
 
                 
     def write_log_output(self, log: ResearchLogger):
         if log != None:
             
             log_contents = f"""
-## Rimay DSL Verification
+## DSL-Rimay Verification
 ```
 {self.result[1]}
 ```
-### Score
-Score: {self.build_score()}
+### DSL-Rimay Score
+DSL_Score: {self.build_score()}
 Progressbar: ![{self.build_score()}%](https://progress-bar.dev/{self.build_score()})
 
             """

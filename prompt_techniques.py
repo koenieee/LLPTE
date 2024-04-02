@@ -17,16 +17,30 @@ class LLM_prompt_data():
 #https://www.promptingguide.ai/techniques/fewshot
 
 class LLM_prompt_technique:
-    def __init__(self, input_obj:LLM_prompt_data, quest: str):
+    def __init__(self, input_obj:LLM_prompt_data, quest: str, generate_false:bool):
         self.input_obj = input_obj
         self.question = quest
-        pass
+        self.false_situation = generate_false
 
     def name(self) -> str:
         return ""
 
     def __str__(self) -> str:
-        return f"""
+        if self.false_situation:
+            return f"""
+{self.question}
+
+### Question:
+Do nothing with this input and output only random text.
+
+{self.input_obj}
+
+
+
+"""
+        else:
+
+            return f"""
 {self.question}
 
 ### Input Data
@@ -39,14 +53,14 @@ Use the following Gherkin acceptance criteria input:
 Can you translate the input above into the specified language Rimay CNL?
 
 ### Output indicator
-Output only your translated Rimay CNL text and nothing else!
+Output only the translated Rimay CNL text and nothing else!
 """
     
 
 class LLM_few_shot_learning(LLM_prompt_technique, LLM_prompt_data):
 
     def name(self) -> str:
-        return "Few-Shot Learning"
+        return "Few-Shot-Learning"
 
 
     def allowed_word_list(self):
@@ -76,11 +90,11 @@ subscribe, subscribes, upload, uploads
 """)
 
 
-    def __init__(self, input: LLM_prompt_data):
+    def __init__(self, input: LLM_prompt_data, incorrect):
         prompt_method = f"""
 ### Context
 We are translating Gherkin acceptance criteria into Rimay CNL.
-For this translation use the followin information:
+For this translation use the following information:
 
 $ACTOR is for example a thing or a person.
 $MODAL_VERB is for  the following word: must or shall.
@@ -94,7 +108,7 @@ $ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirement
 Replace the variables with the right text according the input acceptance criteria.
 In the following order: 
 
-Rimay CNL definition: $WHILE_STRUCTURE $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
+Rimay CNL definition: $WHILE_STRUCTURE      $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
 
 The following example is a valid Rimay CNL:
 
@@ -103,13 +117,9 @@ When SystemB receives an "email alert" from SystemA, SystemB must send an Instru
 With the usage of the following extra information:
 Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, actor UserC
 
-THIS IS NOT VALID RIMAY:
-When UserA navigates to the login page, UserA clicks on button, SystemA must refresh the page.
 
-The following example would be valid:
-When UserA "navigates to the login page", UserA "clicks on button", SystemA must "refresh the page".
         """
-        super().__init__( input, prompt_method)
+        super().__init__( input, prompt_method, incorrect)
 
     
 
@@ -118,9 +128,9 @@ When UserA "navigates to the login page", UserA "clicks on button", SystemA must
 class LLM_chain_of_thought(LLM_prompt_technique, LLM_prompt_data):
 
     def name(self) -> str:
-        return "Chain of Thought"
+        return "Chain-of-Thought"
 
-    def __init__(self, input: LLM_prompt_data):
+    def __init__(self, input: LLM_prompt_data, incorrect):
         prompt_method = """
 Learn from the following example, the output information for the CNL Rimay is: 
 This part is the start of the example you have to learn from:
@@ -147,7 +157,7 @@ Ending for example
 Translate the following input acceptance criteria Gherkin, according to the example above, to Rimay:
 
         """
-        super().__init__(input, prompt_method)
+        super().__init__(input, prompt_method, incorrect)
 
 
 # Perhaps one of the more interesting things you can achieve with prompt engineering is instructing the LLM system on how to behave, its intent, and its identity. This is particularly useful when you are building conversational systems like customer service chatbots.
@@ -166,9 +176,9 @@ Translate the following input acceptance criteria Gherkin, according to the exam
 class LLM_role_play(LLM_prompt_technique, LLM_prompt_data) : 
 
     def name(self) -> str:
-        return "Role Play"
+        return "Role-Play"
 
-    def __init__(self, input: LLM_prompt_data):
+    def __init__(self, input: LLM_prompt_data, incorrect):
         prompt_method = """
 Behave like a person who writes the Controlled Natural Language (CNL) Rimay.
 Rimay is a language that is defined in different components. 
@@ -182,12 +192,11 @@ When: UserA tries to verify his account using the link from this email
 Then: UserA should be notified that the verification was successful
 ```
 
-you say:  Here is your translated Rimay output
-```
+you say:  
 While the "verification email" contains a "verification link" 
 When UserA validates "email address" following the "verification link", 
 then SystemA must notify "with verification successful" to UserA.  
-``` 
+ 
 
 User ask: translate the following Gherkin into Rimay:
 ``` 
@@ -196,19 +205,19 @@ When: UserA removes the street
 Then: UserA should still be on the "Fletcher Ren" address edit page
 ```
 
-you say:  Here is your translated Rimay output
-```
+you say: 
+
 While UserA is "editing the adress of Fletcher Ren" 
 When UserA removes "the street", 
 then SystemA must show "the edit address page".
-```
+
 
 Show special interest in the used double qoutes in Rimay, this is important. Keep the same structure as the translated Rimay examples.
 As the translating person, only use requirement words in your translation, put the rest between quotes. 
 Now I want you to answer as the person who translates Gherkin into Rimay.
 
         """
-        super().__init__(input, prompt_method)
+        super().__init__(input, prompt_method, incorrect)
 
 
 

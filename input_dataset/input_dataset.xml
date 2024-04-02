@@ -47,6 +47,9 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
             Then: the withdrawal should be complete without errors or warnings
         </simplified>
         <manual_translation>
+            While the "bank account" has "money" 
+            When UserA retrieves "less than max money amount" from "credit card",
+            then SystemA must accepts "this withdrawal".
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
@@ -64,6 +67,9 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
             Then: ensure the rejection message is displayed
         </simplified>
         <manual_translation>
+            While the "bank account" has "money" 
+            When UserA retrieves "more than max money amount" from "credit card", 
+            then SystemA must not accepts "this withdrawal".
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
@@ -79,6 +85,9 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
             Then: SystemA refreshes page 
         </simplified>
         <manual_translation>
+            While UserA is "navigating to login page" 
+            When UserA uses "the login button", 
+            then SystemA must regenerate "the login page".
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
@@ -116,6 +125,9 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
             Then: UserA should still be on the "Fletcher Ren" address edit page
         </simplified>
         <manual_translation>
+            While UserA is "editing the adress of Fletcher Ren" 
+            When UserA removes "the street", 
+            then SystemA must show "the edit address page".
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
