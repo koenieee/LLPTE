@@ -26,20 +26,7 @@ class LLM_prompt_technique:
         return ""
 
     def __str__(self) -> str:
-        if self.false_situation:
-            return f"""
-{self.question}
-
-### Question:
-{self.input_obj}
-
-Can you write a random story from 20 words?
-
-
-"""
-        else:
-
-            return f"""
+        return f"""
 {self.question}
 
 ### Input Data
@@ -90,7 +77,31 @@ subscribe, subscribes, upload, uploads
 
 
     def __init__(self, input: LLM_prompt_data, incorrect):
-        prompt_method = f"""
+        prompt_method_faulty = f"""
+### Context
+We are translating Gherkin acceptance criteria into Rimay CNL.
+For this translation use the following information:
+
+$ACTOR is for example a thing or a person.
+$MODAL_VERB is for  the following word: should or can
+$TRIGGER is for example a trigger action, nothing what a system does.
+
+$WHILE_STRUCTUREis the word  'When' followed by the Gherkin When condition
+$WHEN_STRUCTURE  is the word 'While' followed by the Gherkin Given condition 
+$SYSTEM_RESPONSE is a combination of the Actors and the Gherkin Then condition.
+
+$ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirements.
+Replace the variables with the right text according the input acceptance criteria.
+In the following order: 
+
+Rimay CNL definition: $SYSTEM_RESPONSE  $MODAL_VERB      $WHILE_STRUCTURE         $ACTOR      $WHEN_STRUCTURE
+
+With the usage of the following extra information:
+Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, actor UserC
+
+
+        """
+        prompt_method_correct = f"""
 ### Context
 We are translating Gherkin acceptance criteria into Rimay CNL.
 For this translation use the following information:
@@ -118,8 +129,10 @@ Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, a
 
 
         """
-        super().__init__( input, prompt_method, incorrect)
-
+        if incorrect:
+            super().__init__( input, prompt_method_faulty, incorrect)
+        else:
+            super().__init__( input, prompt_method_correct, incorrect)
     
 
 

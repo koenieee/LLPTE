@@ -15,7 +15,7 @@ class ResearchLogger():
         self.write_header()
         self.final_score = 0
         self.number_of_scores = 0
-        self.researcher_score = 1
+        self.researcher_score = 0
 
     def write_header(self):
         self.file_contents += f"""
@@ -54,9 +54,19 @@ Researcher_score = {score}
 
     def generate_final_score(self):
         if self.researcher_score > 0 : 
+
             this_score = min(100, ( self.final_score / self.number_of_scores ) + self.researcher_score)
         else:
-            this_score = min(100, ( self.final_score / self.number_of_scores ) - self.researcher_score)
+            this_score = min(100, ( self.final_score / self.number_of_scores ) - abs(self.researcher_score))
+
+        print("FINAL score")
+        print(self.researcher_score )
+        print(self.final_score)
+        print(self.number_of_scores)
+        print(self.researcher_score)
+        print("Final:")
+        print(this_score)
+
         self.file_contents = f"""
 ### Final Score
 Final_score = {this_score}

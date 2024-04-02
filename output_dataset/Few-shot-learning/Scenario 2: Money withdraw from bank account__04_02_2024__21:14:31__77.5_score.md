@@ -2,8 +2,8 @@
 
 # LLM Experiment Information
 * Prefix:   Few-shot-learning
-* Datetime: 04_02_2024__20:55:23
-* UniqueID: 6b26aaae-3916-42dc-a3a5-cfde3fc3526c
+* Datetime: 04_02_2024__21:14:31
+* UniqueID: 28b1154d-21d2-43d2-ae57-de5ccfdc0d79
 * Scenario name: Scenario 2: Money withdraw from bank account
 
         
@@ -131,7 +131,7 @@ Progressbar: ![100%](https://progress-bar.dev/100)
             
 
 ### Final Score
-Final_score = 87.5
+Final_score = 77.5
 
-Progressbar: ![87.5%](https://progress-bar.dev/87.5)
+Progressbar: ![77.5%](https://progress-bar.dev/77.5)
 
