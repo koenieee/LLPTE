@@ -11,7 +11,6 @@ from random import random
 
 
 #['Few-shot learning', 'Chain-of-thought', 'Role play']
-current_logger = None
 
 start_rimay_actors = """Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, actor UserC
 Classes: class Instruction := description record, class Y
@@ -19,7 +18,6 @@ Classes: class Instruction := description record, class Y
 
 
 def convert_single_gherkin_to_rimay(scenario_name: str, input_text:str, translation_type: str, incorrect):
-    global current_logger
     current_logger = ResearchLogger(translation_type, scenario_name) #Vervalt bij nieuwe logger.
 
     pre_content = f"""
@@ -143,7 +141,7 @@ def results(path):
 
 
         ],
-    }).classes('w-full h-64')
+    }).classes('w-full h-200')
 
     def update():
         chart.options['series'][0]['data'][0] = random()
