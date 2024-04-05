@@ -3,7 +3,7 @@ from prompt_techniques import LLM_chain_of_thought, LLM_few_shot_learning, LLM_p
 from logger import ResearchLogger 
 
 
-def ask_different_prompts(input_text: str, prompt_tech: str, log:ResearchLogger, incorrect: bool = False) -> str:
+def ask_different_prompts(input_text: str, prompt_tech: str, log:ResearchLogger, temperature, incorrect: bool = False) -> str:
     prompt_data = LLM_prompt_data(input_text)
     llm_communicator = LLM_Communicator()
     fsl_prompt = LLM_few_shot_learning(prompt_data, incorrect)
@@ -11,11 +11,11 @@ def ask_different_prompts(input_text: str, prompt_tech: str, log:ResearchLogger,
     rp_prompt = LLM_role_play(prompt_data, incorrect)
     result = ""
     if prompt_tech.strip() == "Few-shot-learning": #['Few-shot learning', 'Chain-of-thought', 'Role play']
-        result = llm_communicator.ask_llm_to_convert(fsl_prompt)
+        result = llm_communicator.ask_llm_to_convert(fsl_prompt, temperature)
     elif prompt_tech.strip() == "Chain-of-thought":
-        result = llm_communicator.ask_llm_to_convert(cot_prompt)
+        result = llm_communicator.ask_llm_to_convert(cot_prompt, temperature)
     else: #Role play
-        result = llm_communicator.ask_llm_to_convert(rp_prompt)
+        result = llm_communicator.ask_llm_to_convert(rp_prompt, temperature)
 
     llm_communicator.write_log_output(log)
     

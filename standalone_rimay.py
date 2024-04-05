@@ -17,8 +17,8 @@ Classes: class Instruction := description record, class Y
 """
 
 
-def convert_single_gherkin_to_rimay(scenario_name: str, input_text:str, translation_type: str, incorrect):
-    current_logger = ResearchLogger(translation_type, scenario_name) #Vervalt bij nieuwe logger.
+def convert_single_gherkin_to_rimay(scenario_name: str, input_text:str, translation_type: str, incorrect, temperature):
+    current_logger = ResearchLogger(translation_type, temperature, scenario_name) #Vervalt bij nieuwe logger.
 
     pre_content = f"""
 # Scenario Name {scenario_name}
@@ -32,7 +32,7 @@ def convert_single_gherkin_to_rimay(scenario_name: str, input_text:str, translat
 ```
     """
     current_logger.append_result(pre_content)
-    response = ask_different_prompts(input_text.strip(), translation_type, current_logger, incorrect)
+    response = ask_different_prompts(input_text.strip(), translation_type, current_logger, incorrect, temperature)
     researcher_score(input_text, response, current_logger)
     rimay_check(response, current_logger)
 
@@ -75,9 +75,9 @@ def rimay_check(rimay_text, current_logger: ResearchLogger):
 
 
 
-def start_gherkin_translation(scenario_name: str, acceptance_criteria: str, techniek):
-    convert_single_gherkin_to_rimay(scenario_name, acceptance_criteria, techniek, False)
-    convert_single_gherkin_to_rimay(scenario_name + "_Incorrect_", acceptance_criteria, techniek, True)
+def start_gherkin_translation(scenario_name: str, acceptance_criteria: str, techniek, llmtemp):
+    convert_single_gherkin_to_rimay(scenario_name, acceptance_criteria, techniek, False, llmtemp)
+    convert_single_gherkin_to_rimay(scenario_name + "_Incorrect_", acceptance_criteria, techniek, True, llmtemp)
 
     # convert_single_gherkin_to_rimay(scenario_name, acceptance_criteria, "Chain-of-thought")
     # convert_single_gherkin_to_rimay(scenario_name, acceptance_criteria, "Role play")
@@ -103,11 +103,11 @@ def results(path):
             score = re.findall(r'\d+', all_data[3])[0]
             if "_Incorrect_" in x:
 
-                scenarios_TN.append(f"Scenario {scenario_num}")
+                scenarios_TN.append(f"Generated Rimay {scenario_num}")
                 data_values_TN.append(int(score))
 
             else:
-                scenarios_TP.append(f"Scenario {scenario_num}")
+                scenarios_TP.append(f"Generated Rimay {scenario_num}")
                 data_values_TP.append(int(score))
 
 
@@ -131,8 +131,8 @@ def results(path):
     'chart': {'type': 'bar'},
     'xAxis': {'categories': scenarios_TP},
     'series': [
-        {'name': path.replace("output_dataset/", "").replace("/", "") + " TP", 'data': data_values_TP},
-        {'name': path.replace("output_dataset/", "").replace("/", "")  + " TN", 'data': data_values_TN},
+        {'name': path.replace("output_dataset/", "").replace("/", "").replace("_", " ") + " TP", 'data': data_values_TP},
+        {'name': path.replace("output_dataset/", "").replace("/", "").replace("_", " ")  + " TN", 'data': data_values_TN},
 
         # {'name': 'Few-Shot-learning Incorrect (TN)', 'data': [12, 13, 14]},
 

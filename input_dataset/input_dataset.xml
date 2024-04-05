@@ -12,7 +12,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
 -->
 <acceptance_criterium>
     <acceptance_criteria>
-        <scenario_name>Scenario 1: Requesting the cash from a creditworthy account</scenario_name>
+        <scenario_name>Gherkinscenario 1: Requesting the cash from a creditworthy account</scenario_name>
         <original>
             Given: that the account is creditworthy
             And: the card is valid
@@ -34,7 +34,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 2: Money withdraw from bank account</scenario_name>
+        <scenario_name>Gherkinscenario 2: Money withdraw from bank account</scenario_name>
         <original>
             Given: my bank account is in credit, 
             And: I made no withdrawals recently
@@ -53,7 +53,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 3: Requesting the cash from an overdrawn account</scenario_name>
+        <scenario_name>Gherkinscenario 3: Requesting the cash from an overdrawn account</scenario_name>
         <original>
             Given: that the account is overdrawn
             And: the card is valid
@@ -73,7 +73,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 4: User presses button.</scenario_name>
+        <scenario_name>Gherkinscenario 4: User presses button.</scenario_name>
         <original>
             Given: UserA navigates to the login page
             When: UserA clicks on button
@@ -91,7 +91,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 5: Getting verified after clicking the link in the verification message</scenario_name>
+        <scenario_name>Gherkinscenario 5: Getting verified after clicking the link in the verification message</scenario_name>
         <original>
             Given: a verification email has already been sent to "valkyrie@cain.com"
             When: I try to verify my account using the link from this email
@@ -111,7 +111,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 6: The selected province stays after validation error</scenario_name>
+        <scenario_name>Gherkinscenario 6: The selected province stays after validation error</scenario_name>
         <original>
             Given: I am editing the address of "Fletcher Ren"
             When: I remove the street
@@ -131,7 +131,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 7: Not being able to add a product to the cart when it is out of stock</scenario_name>
+        <scenario_name>Gherkinscenario 7: Not being able to add a product to the cart when it is out of stock</scenario_name>
         <original>
             Given: the product "T-shirt banana" is out of stock
             When: I check this product's details
@@ -148,7 +148,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 8: Disabling country</scenario_name>
+        <scenario_name>Gherkinscenario 8: Disabling country</scenario_name>
         <original>
             Given: the store has country "United States"
             When: I want to edit this country
@@ -169,7 +169,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 9: Resending the verification email as a logged in user</scenario_name>
+        <scenario_name>Gherkinscenario 9: Resending the verification email as a logged in user</scenario_name>
         <original>
             Given: I am logged in as "valkyrie@cain.com"
             When: I resend the verification email
@@ -188,7 +188,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 10: Logging out the user doesn't log out my admin account</scenario_name>
+        <scenario_name>Gherkinscenario 10: Logging out the user doesn't log out my admin account</scenario_name>
         <original>
             Given: I am impersonating the customer "remnant@london.uk"
             When: I log out from the store
@@ -204,7 +204,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 11: Seeing disabled code field while editing country</scenario_name>
+        <scenario_name>Gherkinscenario 11: Seeing disabled code field while editing country</scenario_name>
         <original>
             Given: the store has country "United States"
             When: I want to edit this country
@@ -220,7 +220,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 12: Changing the currency of my cart</scenario_name>
+        <scenario_name>Gherkinscenario 12: Changing the currency of my cart</scenario_name>
         <original>
             Given: I have product "The Pug Mug" in the cart
             When: I switch to the "EUR" currency
@@ -237,7 +237,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 13: Viewing information about empty cart after channel switching</scenario_name>
+        <scenario_name>Gherkinscenario 13: Viewing information about empty cart after channel switching</scenario_name>
         <original>
             Given: I simplified my current channel to "Poland"
             And: I added product "Onion" to the cart
@@ -255,7 +255,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 14: Displaying default shop homepage</scenario_name>
+        <scenario_name>Gherkinscenario 14: Displaying default shop homepage</scenario_name>
         <original>
             Given: channel "United States" does not use any theme
             When: I visit this channel's homepage
@@ -271,7 +271,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 15: Displaying themed shop homepage</scenario_name>
+        <scenario_name>Gherkinscenario 15: Displaying themed shop homepage</scenario_name>
         <original>
             Given: channel "United States" uses "maverick/meerkat" theme
             When: I visit this channel's homepage
@@ -287,7 +287,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 16: Choosing shipping address from address book</scenario_name>
+        <scenario_name>Gherkinscenario 16: Choosing shipping address from address book</scenario_name>
         <original>
             Given: I have product "PHP T-Shirt" in the cart
             And: I am at the checkout addressing step
@@ -304,7 +304,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 17: Seeing the unpaid order in the list</scenario_name>
+        <scenario_name>Gherkinscenario 17: Seeing the unpaid order in the list</scenario_name>
         <original>
             Given: I am logged in as "john@example.com"
             When: I view my order history
@@ -320,7 +320,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 18: Being unable to change currencies</scenario_name>
+        <scenario_name>Gherkinscenario 18: Being unable to change currencies</scenario_name>
         <original>
             Given: the exchange rate of "US Dollar" to "British Pound" is 1.30
             When: I want to edit this exchange rate
@@ -337,7 +337,7 @@ While the <GHERKIN_GIVEN_PRECONDITION> when <GHERKIN_TRIGGER>, then <GHERKIN_POS
         </manual_translation>
     </acceptance_criteria>
     <acceptance_criteria>
-        <scenario_name>Scenario 19: Inability to impersonate a customer with no account</scenario_name>
+        <scenario_name>Gherkinscenario 19: Inability to impersonate a customer with no account</scenario_name>
         <original>
             Given: the store has customer "harold@thrasher.ie" with first name "Harold"
             When: I view their details

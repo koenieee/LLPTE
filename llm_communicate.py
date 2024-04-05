@@ -39,15 +39,17 @@ class LLM_Communicator():
             print("LLM_Communicator: Error no logger found")
 
 
-    def ask_llm_to_convert(self, question: LLM_prompt_technique):
+    def ask_llm_to_convert(self, question: LLM_prompt_technique, temp):
         self.question = None
         self.answer = None
 
         self.question = question
+        print("Temperature? " + temp)
+        myTemp = temp
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", # engine = "deployment_name".
-            temperature=0.2,
+            temperature=eval(myTemp),
             messages=[
                 
                 {"role": "user", "content": str(question)},

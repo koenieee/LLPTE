@@ -2,20 +2,28 @@ import os
 from prompt_techniques import LLM_prompt_technique
 from datetime import datetime
 import uuid
+from pathlib import Path
+
 
 class ResearchLogger():
     
-    def __init__(self, prefix_name, scenario_name: str = "") -> None:
+    def __init__(self, prefix_name, temperature, scenario_name: str = "" ) -> None:
         self.log_directory = "output_dataset/"
         self.timestamp = datetime.now().strftime("%m_%d_%Y__%H:%M:%S")
         self.prefix = prefix_name
         self.scenario = scenario_name
-        self.log_file = f"{self.log_directory}/{self.prefix}/{self.scenario}__{self.timestamp}.md"
+        self.llm_temp = temperature
+
+        self.directory = f"{self.log_directory}/{self.prefix}_{self.llm_temp}temp"
+        self.log_file = f"{self.directory}/{self.scenario}__{self.timestamp}.md"
         self.file_contents = ""
-        self.write_header()
         self.final_score = 0
         self.number_of_scores = 0
         self.researcher_score = 0
+        Path(self.directory).mkdir(parents=True, exist_ok=True)
+
+        self.write_header()
+
 
     def write_header(self):
         self.file_contents += f"""
@@ -24,7 +32,8 @@ class ResearchLogger():
 * Prefix:   {self.prefix}
 * Datetime: {self.timestamp}
 * UniqueID: {uuid.uuid4()}
-* Scenario name: {self.scenario}
+* Gherkinscenario name: {self.scenario}
+* LLM-temperature: {self.llm_temp}
 
         """
         self.write_to_file()
@@ -80,7 +89,7 @@ Progressbar: ![{this_score}%](https://progress-bar.dev/{this_score})
 
         # Absolute path of a file
         old_name =  self.log_file 
-        new_name = f"{self.log_directory}/{self.prefix}/{self.scenario}__{self.timestamp}__{this_score}_score.md"
+        new_name = f"{self.directory}/{self.scenario}__{self.timestamp}__{this_score}_score.md"
 
         # Renaming the file
         os.rename(old_name, new_name)

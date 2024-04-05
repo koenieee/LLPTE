@@ -5,7 +5,7 @@ class LLM_prompt_data():
 
     def __str__(self) -> str:
         return self.text
-
+    
     def precondition_data(self): #todo, for gherkin i guess
         pass 
 
@@ -94,7 +94,7 @@ $ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirement
 Replace the variables with the right text according the input acceptance criteria.
 In the following order: 
 
-Rimay CNL definition: $SYSTEM_RESPONSE  $MODAL_VERB      $WHILE_STRUCTURE         $ACTOR      $WHEN_STRUCTURE
+Rimay CNL definition: $SYSTEM_RESPONSE $MODAL_VERB $WHILE_STRUCTURE $ACTOR $WHEN_STRUCTURE
 
 With the usage of the following extra information:
 Actors: actor SystemA, actor SystemB, actor SystemC, actor UserX, actor UserA, actor UserC
@@ -118,7 +118,7 @@ $ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirement
 Replace the variables with the right text according the input acceptance criteria.
 In the following order: 
 
-Rimay CNL definition: $WHILE_STRUCTURE      $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
+Rimay CNL definition: $WHILE_STRUCTURE $WHEN_STRUCTURE $ACTOR $MODAL_VERB $SYSTEM_RESPONSE
 
 The following example is a valid Rimay CNL:
 

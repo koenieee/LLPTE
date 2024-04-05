@@ -39,6 +39,7 @@ if gui == "standalone":
     range_start = int(sys.argv[2]) or 0
     range_end = int(sys.argv[3]) or 20
     techniek = sys.argv[4] or "Few-shot-learning"
+    temp = sys.argv[5] or 0.2
 
     print(gherkin_acceptance_criteria)
     print(len(all_acceptance_criteria))
@@ -48,7 +49,8 @@ if gui == "standalone":
         content_acceptance_criteria = scenario["simplified"]
 
         print(scenario_name+"\n")
-        start_gherkin_translation(scenario_name, content_acceptance_criteria, techniek)
+        start_gherkin_translation(scenario_name, content_acceptance_criteria, techniek, temp)
+        
 elif gui == "results":
     techniek = str(sys.argv[2]) or "Few-shot-learning"
     data_directory = f"output_dataset/{techniek}/"
