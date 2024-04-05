@@ -32,7 +32,7 @@ def convert_single_gherkin_to_rimay(scenario_name: str, input_text:str, translat
 ```
     """
     current_logger.append_result(pre_content)
-    response = ask_different_prompts(input_text.strip(), translation_type, current_logger, incorrect, temperature)
+    response = ask_different_prompts(input_text.strip(), translation_type, current_logger, temperature, incorrect)
     researcher_score(input_text, response, current_logger)
     rimay_check(response, current_logger)
 
@@ -141,7 +141,7 @@ def results(path):
 
 
         ],
-    }).classes('w-full h-200')
+    }).classes('w-full h-400')
 
     def update():
         chart.options['series'][0]['data'][0] = random()

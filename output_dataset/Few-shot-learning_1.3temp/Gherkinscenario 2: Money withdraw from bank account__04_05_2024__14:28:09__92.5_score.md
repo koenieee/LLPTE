@@ -2,8 +2,8 @@
 
 # LLM Experiment Information
 * Prefix:   Few-shot-learning
-* Datetime: 04_05_2024__13:29:05
-* UniqueID: 8f138f36-7983-4012-a4be-07be403c98f2
+* Datetime: 04_05_2024__14:28:09
+* UniqueID: b3aba5d9-45d2-4fff-b984-bdca3aecfb01
 * Gherkinscenario name: Gherkinscenario 2: Money withdraw from bank account
 * LLM-temperature: 1.3
 
@@ -38,7 +38,7 @@ $ACTOR, $MODAL_VERB and a $SYSTEM_RESPONSE is mandatory in all Rimay requirement
 Replace the variables with the right text according the input acceptance criteria.
 In the following order: 
 
-Rimay CNL definition: $WHILE_STRUCTURE      $WHEN_STRUCTURE   $ACTOR   $MODAL_VERB    $SYSTEM_RESPONSE
+Rimay CNL definition: $WHILE_STRUCTURE $WHEN_STRUCTURE $ACTOR $MODAL_VERB $SYSTEM_RESPONSE
 
 The following example is a valid Rimay CNL:
 
@@ -67,7 +67,7 @@ Output only the translated Rimay CNL text and nothing else!
 
 ## Rimay Output
 ```
-While UserA bank account is in credit   When UserA attempts to withdraw an amount less than UserA card's limit   UserA   must    the withdrawal should be complete without errors or warnings
+While UserA bank account is in credit When UserA attempts to withdraw an amount less than UserA card's limit UserA must the withdrawal should be complete without errors or warnings
 ``` 
             
 
@@ -82,22 +82,22 @@ Researcher_score = 10
 ERROR:no viable alternative at input 'account' (line : 3 column : 18)
 ERROR:no viable alternative at input 'is' (line : 3 column : 26)
 ERROR:no viable alternative at input 'credit' (line : 3 column : 32)
-ERROR:no viable alternative at input 'When' (line : 3 column : 41)
-ERROR:missing '.' at 'UserA' (line : 3 column : 46)
-ERROR:no viable alternative at input 'attempts' (line : 3 column : 52)
-ERROR:missing '.' at 'withdraw' (line : 3 column : 64)
-ERROR:no viable alternative at input 'an' (line : 3 column : 73)
-ERROR:missing '.' at 'amount' (line : 3 column : 76)
-ERROR:no viable alternative at input 'less' (line : 3 column : 83)
-ERROR:no viable alternative at input 'UserA' (line : 3 column : 93)
-ERROR:no viable alternative at input 'card' (line : 3 column : 99)
-ERROR:mismatched character '<EOF>' expecting ''' (line : 3 column : 103)
+ERROR:no viable alternative at input 'When' (line : 3 column : 39)
+ERROR:missing '.' at 'UserA' (line : 3 column : 44)
+ERROR:no viable alternative at input 'attempts' (line : 3 column : 50)
+ERROR:missing '.' at 'withdraw' (line : 3 column : 62)
+ERROR:no viable alternative at input 'an' (line : 3 column : 71)
+ERROR:missing '.' at 'amount' (line : 3 column : 74)
+ERROR:no viable alternative at input 'less' (line : 3 column : 81)
+ERROR:no viable alternative at input 'UserA' (line : 3 column : 91)
+ERROR:no viable alternative at input 'card' (line : 3 column : 97)
+ERROR:mismatched character '<EOF>' expecting ''' (line : 3 column : 101)
 ERROR:Couldn't resolve reference to ActorOrClassOrProperty 'bank'. (line : 3 column : 13)
 ERROR:Couldn't resolve reference to Quantifier 'UserA'. (line : 3 column : 7)
 ERROR:Couldn't resolve reference to Actor 'account'. (line : 3 column : 18)
 ERROR:Couldn't resolve reference to Actor 'credit'. (line : 3 column : 32)
-ERROR:Couldn't resolve reference to Actor 'withdraw'. (line : 3 column : 64)
-ERROR:Couldn't resolve reference to Actor 'amount'. (line : 3 column : 76)
+ERROR:Couldn't resolve reference to Actor 'withdraw'. (line : 3 column : 62)
+ERROR:Couldn't resolve reference to Actor 'amount'. (line : 3 column : 74)
 
 ```
 ### DSL-Rimay Score
