@@ -121,32 +121,52 @@ def results(path):
 
     # print(scenarios)
     # print(data_values)
-    print(scenarios_TP)
-    print(data_values_TP)
-    print(data_values_TN)
+    # print(scenarios_TP)
+    # print(data_values_TP)
+    # print(data_values_TN)
+
+    total_items = len(scenarios_TP)
+    TP = [i for i in data_values_TP if i >= 80]
+    FP = [i for i in data_values_TP if i < 80]
+
+    TN = [i for i in data_values_TN if i < 80]
+    FN = [i for i in data_values_TN if i >= 80]
+    
+    recall = (len(TP)) / ((len(TP)) + (len(FN)))
+    precision = (len(TP)) /  ((len(TP)) + (len(FP)))
+    accuracy = ( len(TP) + len(TN) ) / len(TP + FP + FN + TN)
+
+    print("TP: " + str(TP) + " total: " + str(len(TP)))
+    print("FP: " + str(FP) + " total: " + str(len(FP)))
+    print("TN: " + str(TN) + " total: " + str(len(TN)))
+    print("FN: " + str(FN) + " total: " + str(len(FN)))
+
+    print("Recall: " + str(recall))
+    print("precision: " + str(precision))
+    print("accuracy: " + str(accuracy))
 
 
-    chart = ui.highchart({
-    'title': False,
-    'chart': {'type': 'bar'},
-    'xAxis': {'categories': scenarios_TP},
-    'series': [
-        {'name': path.replace("output_dataset/", "").replace("/", "").replace("_", " ") + " TP", 'data': data_values_TP},
-        {'name': path.replace("output_dataset/", "").replace("/", "").replace("_", " ")  + " TN", 'data': data_values_TN},
+    # chart = ui.highchart({
+    # 'title': False,
+    # 'chart': {'type': 'bar'},
+    # 'xAxis': {'categories': scenarios_TP},
+    # 'series': [
+    #     {'name': path.replace("output_dataset/", "").replace("/", "").replace("_", " ") + " TP", 'data': data_values_TP},
+    #     {'name': path.replace("output_dataset/", "").replace("/", "").replace("_", " ")  + " TN", 'data': data_values_TN},
 
-        # {'name': 'Few-Shot-learning Incorrect (TN)', 'data': [12, 13, 14]},
+    #     # {'name': 'Few-Shot-learning Incorrect (TN)', 'data': [12, 13, 14]},
 
-        # {'name': 'Chain-of-thought', 'data': [12, 56, 72]},
-        # {'name': 'Role-Play', 'data': [57, 44, 82]},
+    #     # {'name': 'Chain-of-thought', 'data': [12, 56, 72]},
+    #     # {'name': 'Role-Play', 'data': [57, 44, 82]},
 
 
-        ],
-    }).classes('w-full h-400')
+    #     ],
+    # }).classes('w-full h-400')
 
-    def update():
-        chart.options['series'][0]['data'][0] = random()
-        chart.update()
+    # def update():
+    #     chart.options['series'][0]['data'][0] = random()
+    #     chart.update()
 
-    ui.button('Update', on_click=update)
+    # ui.button('Update', on_click=update)
 
-    ui.run()
+    # ui.run()
