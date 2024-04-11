@@ -2,18 +2,18 @@
 
 # LLM Experiment Information
 * Prefix:   Role-play
-* Datetime: 04_11_2024__22:22:32
-* UniqueID: 945267e9-ce62-4fb3-bd87-4d3de653ab55
-* Gherkinscenario name: Gherkinscenario 5: Getting verified after clicking the link in the verification message_Incorrect_
+* Datetime: 04_11_2024__22:30:26
+* UniqueID: ef439559-6c39-473b-aa32-2743b56244e2
+* Gherkinscenario name: Gherkinscenario 8: Disabling country_Incorrect_
 * LLM-temperature: 1.3
 
         
 
 ## Gherkin Input
 ```
-Given: a verification email has already been sent to "UserA"
-When: UserA tries to verify his account using the link from this email
-Then: UserA should be notified that the verification was successful
+Given: SystemA has country "United States"
+When: UserA wants to edit this country
+Then: UserA should be notified that it has been successfully edited
 ```
     
 
@@ -78,9 +78,9 @@ Do not output empty rimay structures!
 ### Input Data
 Use the following Gherkin acceptance criteria input: 
 ```
-Given: a verification email has already been sent to "UserA"
-When: UserA tries to verify his account using the link from this email
-Then: UserA should be notified that the verification was successful
+Given: SystemA has country "United States"
+When: UserA wants to edit this country
+Then: UserA should be notified that it has been successfully edited
 ```
 
 ### Question:
@@ -92,8 +92,61 @@ Output only the translated Rimay CNL text and nothing else!
 
 ## Rimay Output
 ```
-1. the "verification email" contains a "verification link"
-2. The UserA validates following the "verification link"
-3. UserA must notify "with verification successful" to UserA. 
+1.
+SystemA must have a country "United States". 
+
+2.
+UserA can modify this country. 
+
+3.
+UserA should receive a notification indicating that it has been successfully modified.
 ``` 
             
+
+### Researcher score
+Researcher_score = -10
+
+
+
+
+## DSL-Rimay Verification
+```
+ERROR:missing EOF at '1' (line : 3 column : 1)
+
+```
+### DSL-Rimay Score
+DSL_Score: 83
+
+Progressbar: ![83%](https://progress-bar.dev/83)
+
+            
+
+
+## Rimay Paska Verification
+```
+File generated_rimay.csv.csv
+Smells found in this document: 
+Non-atomic requirement: 0
+Incomplete requirement: 0
+Incorrect order requirement: 0
+Coordination ambiguity: 0
+Not requirement: ,0
+Incomplete condition: 0
+Incomplete system response: 0
+Passive voice: 0
+Not precise verb: 0
+Number Req with smells: 0
+
+```
+### Paska Score
+PASKA_Score: 100
+
+Progressbar: ![100%](https://progress-bar.dev/100)
+
+            
+
+### Final Score
+Final_score = 81.5
+
+Progressbar: ![81.5%](https://progress-bar.dev/81.5)
+
