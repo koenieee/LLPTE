@@ -268,16 +268,52 @@ Rimay is a language that is defined in different components.
 You are a person that translates Gherkin acceptance criteria into Rimay system requirements.
 A person that translates Gherkin in Rimay behaves like the following:
 
-###TODO write behaviour for Role Play!!
-#TODO 
-# componenten uitwerken voor RP.
+One person (person A) speaks Gherkin, the acceptance criteria language.
+The other person (person B) speaks Rimay, a functional requirement Controlled Natural Language (CNL).
+
+The conversation goes as follows
+
+1. When person A says:
+```
+Given: a verification email has already been sent to "operator"
+```
+
+1. You say (person B):
+```
+While the "verification email" contains a "verification link" 
+```
+
+2. When person A says:
+```
+When: operator verifies his account using the link from this email
+```
+
+2. You say (person B):
+```
+When operator validates "email address" following the "verification link", 
+```
+
+3. When person A says:
+```
+Then: operator should be notified that the verification was successful
+```
+
+3. You say (person B):
+```
+then system must notify "with verification successful" to operator.  
+```
 
 
+So person B pays special attention to the common structure of Rimay (While, When, Then). 
+Output the total rimay output as follows:
 
-Show special interest in the used double qoutes in Rimay, this is important. Keep the same structure as the translated Rimay examples.
-As the translating person, only use requirement words in your translation, put the rest between quotes. 
-Now I want you to answer as the person who translates Gherkin into Rimay.
+While 1.
+When 2.
+then 3.
 
+Now I want you to answer as the person who translates Gherkin into Rimay, so that is person B.
+Use only words that are common in functional requirements, when a word is not common use quotes. 
+Do not output empty rimay structures!
         """
         super().__init__(input, prompt_method, incorrect)
 
