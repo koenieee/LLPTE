@@ -262,7 +262,62 @@ class LLM_role_play(LLM_prompt_technique, LLM_prompt_data) :
         return "Role-Play"
 
     def __init__(self, input: LLM_prompt_data, incorrect):
-        prompt_method = """
+        prompt_method_faulty = """
+Behave like a person who writes the Controlled Natural Language (CNL) Rimay.
+Rimay is a language that is defined in different components. 
+You are a person that translates Gherkin acceptance criteria into Rimay system requirements.
+A person that translates Gherkin in Rimay behaves like the following:
+
+One person (person A) speaks Gherkin, the acceptance criteria language.
+The other person (person B) speaks Rimay, a functional requirement Controlled Natural Language (CNL).
+
+The conversation goes as follows
+
+1. When person A says:
+```
+Given: a verification email has already been sent to "operator"
+```
+
+1. You say (person B):
+```
+ the "verification email" contains a "verification link" 
+```
+
+2. When person A says:
+```
+When: operator verifies his account using the link from this email
+```
+
+2. You say (person B):
+```
+The operator validates following the "verification link", 
+```
+
+3. When person A says:
+```
+Then: operator should be notified that the verification was successful
+```
+
+3. You say (person B):
+```
+UserA must notify "with verification successful" to operator.  
+```
+
+
+So person B pays special attention to the common structure of Rimay. 
+Output the total rimay output as follows:
+
+1.
+2.
+3.
+
+Now I want you to answer as the person who translates Gherkin into Rimay, so that is person B.
+Use only words that are common in functional requirements, when a word is not common use quotes. 
+Do not output empty rimay structures!
+        """
+
+
+        prompt_method_correct = """
 Behave like a person who writes the Controlled Natural Language (CNL) Rimay.
 Rimay is a language that is defined in different components. 
 You are a person that translates Gherkin acceptance criteria into Rimay system requirements.
@@ -315,8 +370,11 @@ Now I want you to answer as the person who translates Gherkin into Rimay, so tha
 Use only words that are common in functional requirements, when a word is not common use quotes. 
 Do not output empty rimay structures!
         """
-        super().__init__(input, prompt_method, incorrect)
 
+        if incorrect:
+            super().__init__( input, prompt_method_faulty, incorrect)
+        else:
+            super().__init__( input, prompt_method_correct, incorrect)
 
 
 
